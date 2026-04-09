@@ -1,0 +1,81 @@
+<ion-content class="ion-padding">
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumbs">
+    <a routerLink="/dashboard" class="breadcrumb-item">
+      <ion-icon name="home-outline"></ion-icon>
+      <span>Inicio</span>
+    </a>
+    <ion-icon name="chevron-forward-outline" class="breadcrumb-separator"></ion-icon>
+    <span class="breadcrumb-item active">Sesiones Activas</span>
+  </nav>
+
+  <h1>Mis Sesiones Activas</h1>
+  <p class="subtitulo">Administra los dispositivos donde tienes sesión iniciada.</p>
+
+  <!-- Loading -->
+  <div *ngIf="cargando" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando sesiones...</p>
+  </div>
+
+  <!-- Lista de sesiones -->
+  <div *ngIf="!cargando">
+    <ion-card *ngFor="let sesion of sesiones" class="sesion-card"
+              [class.sesion-actual]="sesion.esActual">
+
+      <ion-card-content>
+        <div class="sesion-header">
+          <div class="sesion-icon">
+            <ion-icon [name]="getDeviceIcon(sesion.user_agent)"></ion-icon>
+          </div>
+          <div class="sesion-info">
+            <h3>{{ getDeviceName(sesion.user_agent) }}</h3>
+            <ion-badge color="success" *ngIf="sesion.esActual">Sesión actual</ion-badge>
+          </div>
+          <ion-button
+            *ngIf="!sesion.esActual"
+            fill="clear"
+            color="danger"
+            (click)="cerrarSesion(sesion)">
+            <ion-icon name="close-circle-outline"></ion-icon>
+          </ion-button>
+        </div>
+
+        <div class="sesion-detalles">
+          <div class="detalle-item">
+            <ion-icon name="location-outline"></ion-icon>
+            <span>IP: {{ sesion.ip }}</span>
+          </div>
+          <div class="detalle-item">
+            <ion-icon name="time-outline"></ion-icon>
+            <span>Inicio: {{ formatearFecha(sesion.fechaInicio) }}</span>
+          </div>
+          <div class="detalle-item">
+            <ion-icon name="shield-checkmark-outline"></ion-icon>
+            <span>Último uso: {{ formatearFecha(sesion.ultimoUso) }}</span>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Sin sesiones -->
+    <div *ngIf="sesiones.length === 0" class="sin-sesiones">
+      <ion-icon name="shield-checkmark-outline"></ion-icon>
+      <p>No hay sesiones activas</p>
+    </div>
+
+    <!-- Botón cerrar todas -->
+    <ion-button
+      *ngIf="sesiones.length > 1"
+      expand="block"
+      color="danger"
+      fill="outline"
+      class="btn-cerrar-todas"
+      (click)="cerrarTodas()">
+      <ion-icon slot="start" name="log-out-outline"></ion-icon>
+      Cerrar todas las sesiones
+    </ion-button>
+  </div>
+
+</ion-content>

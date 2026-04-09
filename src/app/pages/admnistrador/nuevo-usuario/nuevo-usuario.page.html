@@ -1,0 +1,191 @@
+<ion-content class="ion-padding">
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <span>Herramientas</span>
+    <span class="separator">›</span>
+    <span>Gestión de Usuarios</span>
+    <span class="separator">›</span>
+    <span class="active">Nuevo Usuario</span>
+  </div>
+
+  <!-- Formulario de registro -->
+  <ion-card class="form-card">
+    <ion-card-header>
+      <ion-card-title>Información del Usuario</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+
+      <!-- ── Nombre completo ── -->
+      <div class="campo-grupo">
+        <label class="campo-label">Nombre Completo *</label>
+        <div class="input-wrap" [class.input-error]="errNombre">
+          <ion-input
+            type="text"
+            placeholder="Ej: Juan Pérez López"
+            [(ngModel)]="nombre"
+            (ngModelChange)="validarNombre()"
+          ></ion-input>
+        </div>
+        <p class="error-msg" *ngIf="errNombre">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          {{ errNombre }}
+        </p>
+      </div>
+
+      <!-- ── Email ── -->
+      <div class="campo-grupo">
+        <label class="campo-label">Email *</label>
+        <div class="input-wrap" [class.input-error]="errEmail">
+          <ion-input
+            type="email"
+            placeholder="usuario@empresa.com"
+            [(ngModel)]="email"
+            (ngModelChange)="validarEmail()"
+          ></ion-input>
+        </div>
+        <p class="error-msg" *ngIf="errEmail">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          {{ errEmail }}
+        </p>
+        <p class="ayuda-texto" *ngIf="!errEmail && email">
+          <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+          Email con formato válido
+        </p>
+      </div>
+
+      <!-- ── Contraseña ── -->
+      <div class="campo-grupo">
+        <label class="campo-label">Contraseña *</label>
+        <div class="input-wrap" [class.input-error]="errContrasena">
+          <ion-input
+            type="password"
+            placeholder="Mínimo 8 caracteres"
+            [(ngModel)]="contrasena"
+            (ngModelChange)="validarContrasena()"
+          ></ion-input>
+        </div>
+        <p class="error-msg" *ngIf="errContrasena">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          {{ errContrasena }}
+        </p>
+        <p class="ayuda-texto" *ngIf="!errContrasena && contrasena">
+          <small>✓ Mínimo 8 caracteres, al menos 1 letra y 1 número</small>
+        </p>
+      </div>
+
+      <!-- ── Confirmar Contraseña ── -->
+      <div class="campo-grupo">
+        <label class="campo-label">Confirmar Contraseña *</label>
+        <div class="input-wrap" [class.input-error]="errContrasenaConfirmacion">
+          <ion-input
+            type="password"
+            placeholder="Repita la contraseña"
+            [(ngModel)]="contrasenaConfirmacion"
+            (ngModelChange)="validarContrasenaConfirmacion()"
+          ></ion-input>
+        </div>
+        <p class="error-msg" *ngIf="errContrasenaConfirmacion">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          {{ errContrasenaConfirmacion }}
+        </p>
+        <p class="ayuda-texto" *ngIf="!errContrasenaConfirmacion && contrasenaConfirmacion && contrasena === contrasenaConfirmacion">
+          <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+          Las contraseñas coinciden
+        </p>
+      </div>
+
+      <!-- ── Rol ── -->
+      <div class="campo-grupo">
+        <label class="campo-label">Rol *</label>
+        <div class="input-wrap" [class.input-error]="errRol">
+          <!-- ── Rol ── -->
+          <ion-select
+            placeholder="Seleccione un rol"
+            [(ngModel)]="rol"
+            (ngModelChange)="validarRol()"
+            interface="popover"
+          >
+            <ion-select-option value="Superusuario">Superusuario</ion-select-option>
+            <ion-select-option value="Dirección">Dirección</ion-select-option>
+            <ion-select-option value="Administración">Administración</ion-select-option>
+            <ion-select-option value="Supervisión">Supervisión</ion-select-option>
+            <ion-select-option value="Ingeniería">Ingeniería</ion-select-option>
+            <ion-select-option value="Vendedor">Vendedor</ion-select-option>
+          </ion-select>
+        </div>
+        <p class="error-msg" *ngIf="errRol">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          {{ errRol }}
+        </p>
+      </div>
+
+      <!-- ── CAPTCHA ── -->
+      <div class="campo-grupo">
+        <label class="campo-label">Verificación Humana *</label>
+        <div class="captcha-wrap">
+          <div class="captcha-pregunta">
+            <span>{{ captchaActual.a }}</span>
+            <span>{{ captchaActual.op }}</span>
+            <span>{{ captchaActual.b }}</span>
+            <span>=</span>
+            <span>?</span>
+          </div>
+          <ion-input
+            type="number"
+            placeholder="="
+            [(ngModel)]="respuestaCaptcha"
+            (ngModelChange)="captchaValido = null"
+            class="captcha-input"
+          ></ion-input>
+          <ion-icon
+            name="refresh-outline"
+            class="captcha-refresh"
+            (click)="generarCaptcha()"
+          ></ion-icon>
+        </div>
+        <p class="captcha-ok" *ngIf="captchaValido === true">
+          <ion-icon name="checkmark-circle-outline"></ion-icon> Verificado
+        </p>
+        <p class="captcha-err" *ngIf="captchaValido === false">
+          <ion-icon name="alert-circle-outline"></ion-icon> Respuesta incorrecta
+        </p>
+      </div>
+
+      <!-- ── Mensaje backend ── -->
+      <p class="mensaje-backend"
+        *ngIf="mensajeBackend"
+        [class.msg-success]="tipoMensaje === 'success'"
+        [class.msg-error]="tipoMensaje === 'danger'">
+        {{ mensajeBackend }}
+      </p>
+
+      <!-- ── Botones ── -->
+      <div class="botones-accion">
+        <ion-button
+          expand="block"
+          color="medium"
+          fill="outline"
+          (click)="cancelar()"
+          [disabled]="guardando"
+        >
+          <ion-icon slot="start" name="close-outline"></ion-icon>
+          Cancelar
+        </ion-button>
+
+        <ion-button
+          expand="block"
+          (click)="guardarUsuario()"
+          [disabled]="guardando"
+        >
+          <ion-spinner *ngIf="guardando" name="crescent" slot="start"></ion-spinner>
+          <ion-icon *ngIf="!guardando" slot="start" name="save-outline"></ion-icon>
+          {{ guardando ? 'Guardando...' : 'Guardar Usuario' }}
+        </ion-button>
+      </div>
+
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

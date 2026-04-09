@@ -1,0 +1,200 @@
+<ion-content class="ion-padding">
+
+  <!-- Breadcrumbs -->
+  <nav class="breadcrumbs">
+    <a [routerLink]="['/dashboard']" class="breadcrumb-item">
+      <ion-icon name="home-outline"></ion-icon>
+      <span>Inicio</span>
+    </a>
+    <ion-icon name="chevron-forward-outline" class="breadcrumb-separator"></ion-icon>
+    <span class="breadcrumb-item active">Reportes</span>
+  </nav>
+
+  <!-- Título + selector de periodo -->
+  <div class="title-bar">
+    <h1>Reportes</h1>
+    <div class="periodo-tabs">
+      <button
+        *ngFor="let p of periodos"
+        class="periodo-btn"
+        [class.active]="periodo() === p.valor"
+        (click)="onPeriodo(p.valor)">
+        {{ p.label }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Spinner -->
+  <div *ngIf="cargando()" class="spinner-center">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+  </div>
+
+  <div *ngIf="!cargando()">
+
+    <!-- ── KPI Cards ──────────────────────────────────────────── -->
+    <div class="kpi-row">
+      <div class="kpi-card" *ngFor="let kpi of kpis()" [class]="'kpi-' + kpi.color">
+        <div class="kpi-icon"><ion-icon [name]="kpi.icono"></ion-icon></div>
+        <div class="kpi-body">
+          <div class="kpi-num">{{ kpi.valor }}</div>
+          <div class="kpi-lbl">{{ kpi.titulo }}</div>
+          <div class="kpi-trend" *ngIf="kpi.tendencia">
+            <ion-icon [name]="kpi.tendencia === 'up' ? 'trending-up-outline' : 'trending-down-outline'"></ion-icon>
+            <span [class]="kpi.tendencia === 'up' ? 'up' : 'down'">{{ kpi.pct }}%</span>
+            {{ kpi.subtitulo }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Fila de dos columnas: Status + Presupuesto ─────────── -->
+    <div class="two-col">
+
+      <!-- Estado de Proyectos -->
+      <div class="table">
+        <div class="section-header">
+          <ion-icon name="folder-outline"></ion-icon>
+          Estado de Proyectos
+        </div>
+        <div class="dist-body">
+          <div *ngFor="let d of distribucionStatus()" class="dist-row">
+            <div class="dist-header">
+              <span class="dist-label">{{ d.label }}</span>
+              <span class="dist-right">
+                <ion-badge [color]="d.color">{{ d.count }}</ion-badge>
+                <span class="dist-pct">{{ d.pct }}%</span>
+              </span>
+            </div>
+            <ion-progress-bar [value]="d.pct / 100" [color]="d.color"></ion-progress-bar>
+          </div>
+        </div>
+      </div>
+
+      <!-- Presupuesto -->
+      <div class="table">
+        <div class="section-header">
+          <ion-icon name="bar-chart-outline"></ion-icon>
+          Presupuesto
+        </div>
+        <div class="dist-body">
+          <div class="presup-nums">
+            <div class="presup-item">
+              <div class="presup-lbl">Total proyectos</div>
+              <div class="presup-val primary">
+                {{ presupuestoTotal() | currency:'MXN':'symbol':'1.0-0' }}
+              </div>
+            </div>
+            <div class="presup-item">
+              <div class="presup-lbl">Completados</div>
+              <div class="presup-val success">
+                {{ presupuestoCompletados() | currency:'MXN':'symbol':'1.0-0' }}
+              </div>
+            </div>
+          </div>
+          <div class="bar-label">
+            <span>Completado</span>
+            <span>{{ (presupuestoCompletados() / presupuestoTotal() * 100) | number:'1.0-0' }}%</span>
+          </div>
+          <ion-progress-bar
+            [value]="presupuestoCompletados() / presupuestoTotal()"
+            color="success">
+          </ion-progress-bar>
+
+          <!-- Compras por categoría -->
+          <div class="section-subheader">
+            <ion-icon name="cart-outline"></ion-icon>
+            Compras por Categoría
+          </div>
+          <div *ngFor="let cat of comprasPorCategoria()" class="dist-row">
+            <div class="dist-header">
+              <span class="dist-label">{{ cat.label }}</span>
+              <span class="dist-right">
+                <span class="dist-pct">{{ cat.total | currency:'MXN':'symbol':'1.0-0' }}</span>
+                <span class="dist-pct muted">({{ cat.pct }}%)</span>
+              </span>
+            </div>
+            <ion-progress-bar [value]="cat.pct / 100" color="warning"></ion-progress-bar>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Tabla detalle de proyectos ─────────────────────────── -->
+    <div class="table">
+      <div class="section-header">
+        <ion-icon name="folder-outline"></ion-icon>
+        Detalle de Proyectos
+      </div>
+
+      <!-- Encabezado -->
+      <div class="table-row header">
+        <div>Proyecto</div>
+        <div>Cliente</div>
+        <div>Presupuesto</div>
+        <div>Avance</div>
+        <div>Estado</div>
+      </div>
+
+      <!-- Filas -->
+      <div class="table-row" *ngFor="let p of proyectos()">
+        <div class="proyecto-nombre">{{ p.nombre }}</div>
+        <div class="cliente-nombre">{{ p.cliente }}</div>
+        <div class="presupuesto-val">{{ p.presupuesto | currency:'MXN':'symbol':'1.0-0' }}</div>
+        <div class="avance-col">
+          <ion-progress-bar
+            [value]="p.avance / 100"
+            [color]="colorStatus(p.status)">
+          </ion-progress-bar>
+          <span class="avance-pct">{{ p.avance }}%</span>
+        </div>
+        <div>
+          <ion-badge [color]="colorStatus(p.status)">{{ etiquetaStatus(p.status) }}</ion-badge>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Fila de dos columnas: Top Clientes + Actividad ─────── -->
+    <div class="two-col">
+
+      <!-- Top Clientes -->
+      <div class="table">
+        <div class="section-header">
+          <ion-icon name="people-outline"></ion-icon>
+          Top Clientes
+        </div>
+        <div class="table-row header">
+          <div>#</div>
+          <div>Cliente</div>
+          <div>Proyectos</div>
+        </div>
+        <div class="table-row" *ngFor="let c of topClientes(); let i = index">
+          <div><span class="rank-badge">{{ i + 1 }}</span></div>
+          <div class="cliente-nombre">{{ c.nombre }}</div>
+          <div>
+            <ion-badge color="primary">{{ c.proyectos }}</ion-badge>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actividad reciente -->
+      <div class="table">
+        <div class="section-header">
+          <ion-icon name="time-outline"></ion-icon>
+          Actividad Reciente
+        </div>
+        <div class="actividad-row" *ngFor="let act of actividadReciente()">
+          <ion-icon [name]="act.icono" [color]="act.color"></ion-icon>
+          <div class="actividad-body">
+            <span class="actividad-desc">{{ act.desc }}</span>
+            <span class="actividad-fecha">{{ act.fecha }}</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="height:24px"></div>
+  </div>
+
+</ion-content>

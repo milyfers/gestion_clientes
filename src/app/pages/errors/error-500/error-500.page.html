@@ -1,0 +1,63 @@
+<ion-content class="error-page">
+  <div class="error-container">
+    
+    <!-- Ilustración de error -->
+    <div class="error-illustration">
+      <div class="error-code">500</div>
+      <ion-icon name="alert-circle-outline" class="alert-icon"></ion-icon>
+    </div>
+
+    <!-- Mensaje de error -->
+    <div class="error-content">
+      <h1>Error del servidor</h1>
+      <p class="error-message">
+        Oops! Algo salió mal en nuestro servidor. Estamos trabajando para solucionarlo.
+      </p>
+      <p class="error-hint">
+        Por favor, intenta nuevamente en unos momentos o contacta al soporte técnico.
+      </p>
+    </div>
+
+    <!-- Acciones -->
+    <div class="error-actions">
+      <ion-button expand="block" (click)="reloadPage()">
+        <ion-icon name="refresh-outline" slot="start"></ion-icon>
+        Recargar Página
+      </ion-button>
+      
+      <ion-button expand="block" fill="outline" (click)="goHome()">
+        <ion-icon name="home-outline" slot="start"></ion-icon>
+        Ir al Inicio
+      </ion-button>
+      
+      <ion-button expand="block" fill="clear" (click)="reportError()">
+        <ion-icon name="bug-outline" slot="start"></ion-icon>
+        Reportar Error
+      </ion-button>
+    </div>
+
+    <!-- Información adicional -->
+    <div class="error-info">
+      <p class="info-title">¿Qué puedes hacer?</p>
+      <ul class="info-list">
+        <li>
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <span>Espera unos minutos e intenta nuevamente</span>
+        </li>
+        <li>
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <span>Verifica tu conexión a internet</span>
+        </li>
+        <li>
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <span>Limpia la caché de tu navegador</span>
+        </li>
+        <li>
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <span>Contacta a soporte si el problema persiste</span>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</ion-content>

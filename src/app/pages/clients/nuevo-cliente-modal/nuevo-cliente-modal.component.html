@@ -1,0 +1,267 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Nuevo Cliente</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrarModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="clienteForm" (ngSubmit)="guardarCliente()">
+
+    <!-- ═══ INFORMACIÓN BÁSICA ═══ -->
+    <div class="section-title">
+      <h3>Información Básica</h3>
+    </div>
+
+    <div class="form-grid">
+      <!-- Nombre -->
+      <div class="form-item full-width">
+        <label class="form-label">
+          Nombre del Cliente <span class="required">*</span>
+        </label>
+        <ion-input
+          type="text"
+          placeholder="Ej: Empresa ABC S.A. de C.V."
+          formControlName="nombre"
+          [class.error]="esInvalido('nombre')">
+        </ion-input>
+        <span class="error-msg" *ngIf="esInvalido('nombre')">
+          {{ getMensajeError('nombre') }}
+        </span>
+      </div>
+
+      <!-- Razón Social -->
+      <div class="form-item full-width">
+        <label class="form-label">Razón Social</label>
+        <ion-input
+          type="text"
+          placeholder="Razón social (opcional)"
+          formControlName="razonSocial">
+        </ion-input>
+      </div>
+
+      <!-- RFC -->
+      <div class="form-item">
+        <label class="form-label">
+          RFC <span class="required">*</span>
+        </label>
+        <ion-input
+          type="text"
+          placeholder="ABC123456XYZ"
+          formControlName="rfc"
+          [class.error]="esInvalido('rfc')">
+        </ion-input>
+        <span class="error-msg" *ngIf="esInvalido('rfc')">
+          {{ getMensajeError('rfc') }}
+        </span>
+      </div>
+
+      <!-- Status -->
+      <div class="form-item">
+        <label class="form-label">
+          Estatus <span class="required">*</span>
+        </label>
+        <ion-select
+          formControlName="status"
+          placeholder="Seleccionar"
+          [class.error]="esInvalido('status')">
+          <ion-select-option *ngFor="let status of statusOptions" [value]="status">
+            {{ status }}
+          </ion-select-option>
+        </ion-select>
+        <span class="error-msg" *ngIf="esInvalido('status')">
+          {{ getMensajeError('status') }}
+        </span>
+      </div>
+    </div>
+
+    <!-- ═══ CONTACTO ═══ -->
+    <div class="section-title">
+      <h3>Información de Contacto</h3>
+    </div>
+
+    <div class="form-grid">
+      <!-- Contacto -->
+      <div class="form-item">
+        <label class="form-label">
+          Nombre de Contacto <span class="required">*</span>
+        </label>
+        <ion-input
+          type="text"
+          placeholder="Ej: Juan Pérez"
+          formControlName="contacto"
+          [class.error]="esInvalido('contacto')">
+        </ion-input>
+        <span class="error-msg" *ngIf="esInvalido('contacto')">
+          {{ getMensajeError('contacto') }}
+        </span>
+      </div>
+
+      <!-- Teléfono -->
+      <div class="form-item">
+        <label class="form-label">
+          Teléfono <span class="required">*</span>
+        </label>
+        <ion-input
+          type="tel"
+          placeholder="4491234567"
+          formControlName="telefono"
+          maxlength="10"
+          [class.error]="esInvalido('telefono')">
+        </ion-input>
+        <span class="error-msg" *ngIf="esInvalido('telefono')">
+          {{ getMensajeError('telefono') }}
+        </span>
+      </div>
+
+      <!-- Email -->
+      <div class="form-item full-width">
+        <label class="form-label">
+          Email <span class="required">*</span>
+        </label>
+        <ion-input
+          type="email"
+          placeholder="contacto@empresa.com"
+          formControlName="email"
+          [class.error]="esInvalido('email')">
+        </ion-input>
+        <span class="error-msg" *ngIf="esInvalido('email')">
+          {{ getMensajeError('email') }}
+        </span>
+      </div>
+    </div>
+
+    <!-- ═══ DIRECCIÓN ═══ -->
+    <div class="section-title">
+      <h3>Dirección</h3>
+    </div>
+
+    <div class="form-grid">
+
+      <!-- Código Postal -->
+      <div class="form-item">
+        <label class="form-label">Código Postal</label>
+        <ion-input
+          type="text"
+          maxlength="5"
+          placeholder="Ej: 44100"
+          formControlName="codigoPostal"
+          (ionBlur)="buscarCP()">
+        </ion-input>
+      </div>
+
+      <!-- Colonia -->
+      <div class="form-item">
+        <label class="form-label">Colonia</label>
+        <ion-select
+          formControlName="colonia"
+          placeholder="Seleccionar"
+          [disabled]="colonias.length === 0">
+          <ion-select-option *ngFor="let col of colonias" [value]="col">
+            {{ col }}
+          </ion-select-option>
+        </ion-select>
+      </div>
+
+      <!-- Calle -->
+      <div class="form-item full-width">
+        <label class="form-label">Calle</label>
+        <ion-input
+          type="text"
+          placeholder="Ej: Av. López Mateos"
+          formControlName="calle">
+        </ion-input>
+      </div>
+
+      <!-- Número Exterior -->
+      <div class="form-item">
+        <label class="form-label">Núm. Exterior</label>
+        <ion-input
+          type="text"
+          placeholder="123"
+          formControlName="numExterior">
+        </ion-input>
+      </div>
+
+      <!-- Número Interior -->
+      <div class="form-item">
+        <label class="form-label">Núm. Interior <span class="optional">(opcional)</span></label>
+        <ion-input
+          type="text"
+          placeholder="Depto, local, etc."
+          formControlName="numInterior">
+        </ion-input>
+      </div>
+
+      <!-- Ciudad -->
+      <div class="form-item">
+        <label class="form-label">Ciudad</label>
+        <ion-input
+          type="text"
+          placeholder="Ej: Aguascalientes"
+          formControlName="ciudad">
+        </ion-input>
+      </div>
+
+      <!-- Estado -->
+      <div class="form-item">
+        <label class="form-label">Estado</label>
+        <ion-select
+          formControlName="estado"
+          placeholder="Seleccionar">
+          <ion-select-option *ngFor="let estado of estados" [value]="estado">
+            {{ estado }}
+          </ion-select-option>
+        </ion-select>
+      </div>
+
+    </div>
+
+    <!-- ═══ INFORMACIÓN FISCAL ═══ -->
+    <div class="section-title">
+      <h3>Información Fiscal</h3>
+    </div>
+
+    <div class="form-grid">
+      <!-- Forma de Pago -->
+      <div class="form-item">
+        <label class="form-label">Forma de Pago</label>
+        <ion-select
+          formControlName="formaPago"
+          placeholder="Seleccionar">
+          <ion-select-option *ngFor="let forma of formasPago" [value]="forma">
+            {{ forma }}
+          </ion-select-option>
+        </ion-select>
+      </div>
+
+      <!-- Uso de CFDI -->
+      <div class="form-item">
+        <label class="form-label">Uso de CFDI</label>
+        <ion-select
+          formControlName="usoCFDI"
+          placeholder="Seleccionar">
+          <ion-select-option *ngFor="let uso of usosCFDI" [value]="uso">
+            {{ uso }}
+          </ion-select-option>
+        </ion-select>
+      </div>
+    </div>
+
+    <!-- ═══ BOTONES ═══ -->
+    <div class="form-actions">
+      <ion-button expand="block" fill="outline" (click)="cerrarModal()">
+        Cancelar
+      </ion-button>
+      <ion-button expand="block" type="submit" [disabled]="clienteForm.invalid">
+        <ion-icon slot="start" name="save-outline"></ion-icon>
+        Agregar Nuevo Cliente
+      </ion-button>
+    </div>
+
+  </form>
+</ion-content>

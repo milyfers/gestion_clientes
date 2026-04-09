@@ -1,0 +1,80 @@
+<ion-content class="ion-padding app-b-content">
+
+  <!-- Loading -->
+  <div *ngIf="cargando" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Validando sesión SSO...</p>
+  </div>
+
+  <!-- SSO Válido -->
+  <div *ngIf="!cargando && ssoValido" class="sso-container">
+
+    <div class="app-b-header">
+      <div class="app-badge">App B</div>
+      <h1>Portal de Reportes</h1>
+      <p class="app-b-subtitle">Segunda aplicación — SSO activo</p>
+    </div>
+
+    <!-- Indicador SSO -->
+    <div class="sso-badge">
+      <ion-icon name="shield-checkmark-outline"></ion-icon>
+      <div>
+        <strong>Single Sign-On Activo</strong>
+        <p>Autenticado desde App A sin nuevo login</p>
+      </div>
+    </div>
+
+    <!-- Datos del usuario -->
+    <ion-card class="usuario-card">
+      <ion-card-content>
+        <div class="usuario-info">
+          <div class="usuario-avatar">
+            <ion-icon name="person-outline"></ion-icon>
+          </div>
+          <div>
+            <h3>{{ usuario?.email }}</h3>
+            <ion-badge color="primary">{{ usuario?.role }}</ion-badge>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Contenido de App B -->
+    <div class="app-b-content-section">
+      <h2>Reportes Disponibles</h2>
+      <ion-card class="reporte-card">
+        <ion-card-content>
+          <h3>📊 Reporte de Clientes</h3>
+          <p>Total de clientes registrados en el sistema</p>
+        </ion-card-content>
+      </ion-card>
+      <ion-card class="reporte-card">
+        <ion-card-content>
+          <h3>📁 Reporte de Proyectos</h3>
+          <p>Estado actual de todos los proyectos</p>
+        </ion-card-content>
+      </ion-card>
+      <ion-card class="reporte-card">
+        <ion-card-content>
+          <h3>💰 Reporte Financiero</h3>
+          <p>Presupuestos y facturación del período</p>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <ion-button expand="block" fill="outline" (click)="irAAppA()">
+      ← Volver a App A
+    </ion-button>
+  </div>
+
+  <!-- SSO Inválido -->
+  <div *ngIf="!cargando && !ssoValido" class="sso-error">
+    <ion-icon name="close-circle-outline"></ion-icon>
+    <h2>Acceso denegado</h2>
+    <p>{{ errorMensaje }}</p>
+    <ion-button expand="block" (click)="irALogin()">
+      Ir al Login
+    </ion-button>
+  </div>
+
+</ion-content>

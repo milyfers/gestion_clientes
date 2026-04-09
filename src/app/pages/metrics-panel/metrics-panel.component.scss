@@ -1,0 +1,227 @@
+// ── Variables ─────────────────────────────────────────────────────────
+$primary:  #667eea;
+$accent:   #4facfe;
+$success:  #43e97b;
+$warning:  #f5a623;
+$danger:   #f5576c;
+$radius:   16px;
+$radius-sm: 10px;
+$transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+
+// ── Panel principal ───────────────────────────────────────────────────
+.metrics-panel {
+  background: var(--ion-card-background, #fff);
+  border-radius: $radius;
+  border: 1px solid var(--ion-border-color, rgba(0,0,0,0.07));
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+// ── Header ────────────────────────────────────────────────────────────
+.metrics-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--ion-border-color, rgba(0,0,0,0.06));
+  background: linear-gradient(135deg, rgba($primary, 0.06), rgba($accent, 0.04));
+}
+
+.metrics-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  ion-icon {
+    font-size: 22px;
+    color: $primary;
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+}
+
+.metrics-live {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: $success;
+  letter-spacing: 0.5px;
+  animation: pulse-live 1.5s ease infinite;
+}
+
+@keyframes pulse-live {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+.metrics-reset {
+  background: none;
+  border: 1px solid var(--ion-border-color, rgba(0,0,0,0.1));
+  border-radius: 8px;
+  padding: 6px 8px;
+  cursor: pointer;
+  color: var(--ion-color-medium);
+  transition: all $transition;
+
+  ion-icon { font-size: 18px; }
+
+  &:hover {
+    background: rgba($primary, 0.08);
+    border-color: $primary;
+    color: $primary;
+  }
+}
+
+// ── Grid de métricas ──────────────────────────────────────────────────
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1px;
+  background: var(--ion-border-color, rgba(0,0,0,0.06));
+}
+
+.metric-card {
+  background: var(--ion-card-background, #fff);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: background $transition;
+
+  &:hover {
+    background: rgba($primary, 0.03);
+  }
+}
+
+.metric-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .metric-icon {
+    font-size: 16px;
+    color: var(--ion-color-medium);
+    opacity: 0.6;
+  }
+}
+
+.metric-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--ion-color-medium);
+}
+
+.metric-value {
+  font-size: 1.8rem;
+  font-weight: 800;
+  line-height: 1;
+  margin: 4px 0;
+  transition: color $transition;
+
+  &.valor-bueno  { color: $success; }
+  &.valor-medio  { color: $warning; }
+  &.valor-malo   { color: $danger; }
+}
+
+.metric-bar {
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(0,0,0,0.07);
+  overflow: hidden;
+
+  .metric-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &.fill-bueno { background: $success; }
+    &.fill-medio { background: $warning; }
+    &.fill-malo  { background: $danger; }
+  }
+}
+
+.metric-sub {
+  font-size: 0.68rem;
+  color: var(--ion-color-medium);
+  margin-top: 2px;
+}
+
+// ── Log de eventos ────────────────────────────────────────────────────
+.metrics-log {
+  border-top: 1px solid var(--ion-border-color, rgba(0,0,0,0.06));
+}
+
+.log-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: rgba(0,0,0,0.02);
+  border-bottom: 1px solid var(--ion-border-color, rgba(0,0,0,0.05));
+
+  ion-icon { font-size: 16px; color: $primary; }
+
+  .log-count {
+    margin-left: auto;
+    font-size: 0.7rem;
+    color: var(--ion-color-medium);
+    font-weight: 400;
+  }
+}
+
+.log-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.log-item {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 8px 18px;
+  font-size: 0.78rem;
+  border-bottom: 1px solid var(--ion-border-color, rgba(0,0,0,0.04));
+  animation: slide-log 0.3s ease;
+
+  &:last-child { border-bottom: none; }
+
+  &.log-success { border-left: 3px solid $success; }
+  &.log-info    { border-left: 3px solid $accent; }
+  &.log-warning { border-left: 3px solid $warning; }
+
+  .log-time {
+    font-size: 0.7rem;
+    color: var(--ion-color-medium);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .log-msg {
+    flex: 1;
+    line-height: 1.4;
+  }
+}
+
+@keyframes slide-log {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.log-empty {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 18px;
+  font-size: 0.8rem;
+  color: var(--ion-color-medium);
+
+  ion-icon { font-size: 18px; opacity: 0.5; }
+}

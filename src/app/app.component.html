@@ -1,0 +1,180 @@
+<ion-app (click)="closeUserMenu()">
+  <!-- HEADER - Solo se muestra si NO estás en /home -->
+  @if (mostrarHeader$ | async) {
+    <ion-header class="app-header">
+      <div class="header-container">
+        <!-- IZQUIERDA -->
+        <div class="header-left">
+          <ion-menu-button class="mobile-only" menu="main-menu"></ion-menu-button>
+          <div class="logo">Logo</div>
+        </div>
+
+        <!-- CENTRO - Menú Desktop -->
+        <nav class="menu desktop-only">
+          @for (item of (menuItems$ | async); track item.url) {
+            <div class="menu-item" [class.active]="item.active">
+              <span 
+                class="menu-label" 
+                [routerLink]="item.url" 
+                (click)="setActive(item)"
+              >
+                {{ item.title }}
+              </span>
+
+              @if (item.submenu?.length) {
+                <div class="submenu">
+                @for (subitem of item.submenu; track subitem.url) {
+                  <a class="submenu-item" [routerLink]="subitem.url">
+                    {{ subitem.title }}
+                  </a>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </nav>
+
+        <!-- DERECHA - Avatar con menú desplegable -->
+        <div class="header-right">
+          <div class="user-menu-wrapper" (click)="$event.stopPropagation()">
+            <ion-avatar (click)="toggleUserMenu()">
+              <img src="assets/avatar.jpg" alt="Avatar" />
+            </ion-avatar>
+            
+            <!-- Menú desplegable del usuario -->
+            <div class="user-menu" [class.show]="showUserMenu">
+              <div class="user-menu-header">
+                <div class="user-info">
+                  <strong>{{ usuarioActual?.email?.split('@')[0] | titlecase }}</strong>
+                  <span>{{ usuarioActual?.email }}</span>
+                </div>
+              </div>
+              
+              <div class="user-menu-divider"></div>
+              
+              <button class="user-menu-item" (click)="goToProfile()">
+                <ion-icon name="person-outline"></ion-icon>
+                <span>Mi Perfil</span>
+              </button>
+              
+              <button class="user-menu-item" (click)="goToSettings()">
+                <ion-icon name="settings-outline"></ion-icon>
+                <span>Configuración</span>
+              </button>
+
+              <button class="user-menu-item" (click)="goToSesiones()">
+                <ion-icon name="shield-checkmark-outline"></ion-icon>
+                <span>Mis Sesiones</span>
+              </button>
+
+              <!-- Modo oscuro -->
+              <button class="user-menu-item" (click)="toggleDarkMode(); $event.stopPropagation()">
+                <ion-icon [name]="darkMode ? 'sunny-outline' : 'moon-outline'"></ion-icon>
+                <span>{{ darkMode ? 'Modo Claro' : 'Modo Oscuro' }}</span>
+              </button>
+
+              <!-- NUEVO — Selector de idioma -->
+              <button class="user-menu-item" (click)="toggleIdioma(); $event.stopPropagation()">
+                <ion-icon name="language-outline"></ion-icon>
+                <span>{{ idioma === 'es' ? '🇲🇽 Español' : '🇺🇸 English' }}</span>
+              </button>
+              
+              <div class="user-menu-divider"></div>
+              
+              <button class="user-menu-item logout" (click)="cerrarSesion()">
+                <ion-icon name="log-out-outline"></ion-icon>
+                <span>Cerrar Sesión</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ion-header>
+  }
+
+  <!-- MENÚ LATERAL MÓVIL -->
+  @if (mostrarHeader$ | async) {
+    <ion-menu contentId="main-content" menuId="main-menu" side="start">
+      <ion-header>
+        <ion-toolbar>
+          <ion-title class="menu-logo">MiApp</ion-title>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="menu-content">
+        <ion-list>
+          @for (item of (menuItems$ | async); track item.url) {
+            @if (!item.submenu) {
+              <ion-item
+                [routerLink]="item.url"
+                (click)="setActive(item); closeMenu()"
+                [class.active]="item.active"
+                button
+                detail="false"
+              >
+                <ion-label>{{ item.title }}</ion-label>
+              </ion-item>
+            }
+
+            @if (item.submenu && item.submenu.length > 0) {
+              <ion-accordion-group>
+                <ion-accordion>
+                  <ion-item slot="header">
+                    <ion-label>{{ item.title }}</ion-label>
+                  </ion-item>
+                  
+                  <ion-list slot="content">
+                    @for (subitem of item.submenu; track subitem.url) {
+                      <ion-item
+                        [routerLink]="subitem.url"
+                        (click)="closeMenu()"
+                        button
+                        detail="false"
+                        lines="none"
+                      >
+                        <ion-label class="submenu-label">{{ subitem.title }}</ion-label>
+                      </ion-item>
+                    }
+                  </ion-list>
+                </ion-accordion>
+              </ion-accordion-group>
+            }
+          }
+          
+          <!-- Opciones de usuario en móvil -->
+          <div class="mobile-user-section">
+            <ion-item button detail="false" (click)="goToProfile(); closeMenu()">
+              <ion-icon name="person-outline" slot="start"></ion-icon>
+              <ion-label>Mi Perfil</ion-label>
+            </ion-item>
+            
+            <ion-item button detail="false" (click)="goToSettings(); closeMenu()">
+              <ion-icon name="settings-outline" slot="start"></ion-icon>
+              <ion-label>Configuración</ion-label>
+            </ion-item>
+
+            <!-- Modo oscuro móvil -->
+            <ion-item button detail="false" (click)="toggleDarkMode(); closeMenu()">
+              <ion-icon [name]="darkMode ? 'sunny-outline' : 'moon-outline'" slot="start"></ion-icon>
+              <ion-label>{{ darkMode ? 'Modo Claro' : 'Modo Oscuro' }}</ion-label>
+            </ion-item>
+
+            <!-- NUEVO — Idioma móvil -->
+            <ion-item button detail="false" (click)="toggleIdioma(); closeMenu()">
+              <ion-icon name="language-outline" slot="start"></ion-icon>
+              <ion-label>{{ idioma === 'es' ? '🇲🇽 Español' : '🇺🇸 English' }}</ion-label>
+            </ion-item>
+            
+            <ion-item button detail="false" (click)="cerrarSesion(); closeMenu()" class="logout-item">
+              <ion-icon name="log-out-outline" slot="start"></ion-icon>
+              <ion-label>Cerrar Sesión</ion-label>
+            </ion-item>
+          </div>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+  }
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <ion-router-outlet id="main-content"></ion-router-outlet>
+</ion-app>

@@ -1,0 +1,172 @@
+<ion-content class="ion-padding">
+  <div class="login-content">
+    <div class="login-wrapper">
+
+      <!-- Logo placeholder ─── replica la imagen exacta -->
+      <div class="logo-box">
+        <ion-icon name="image-outline"></ion-icon>
+        <p class="logo-label">Logo de la empresa</p>
+      </div>
+
+      <!-- Título empresa -->
+      <h1 class="empresa-title">NOMBRE DE LA EMPRESA</h1>
+
+      <!-- Tarjeta del formulario -->
+      <div class="login-card" *ngIf="!mostrarMFA">
+
+        <!-- ── Email ── -->
+        <div class="campo-grupo">
+          <label class="campo-label">Email</label>
+          <div class="input-wrap" [class.input-error]="errEmail">
+            <ion-input
+              type="email"
+              placeholder="Valor"
+              required
+              pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+              [(ngModel)]="email"
+              (ngModelChange)="validarEmail()"
+            ></ion-input>
+          </div>
+          <p class="error-msg" *ngIf="errEmail">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            {{ errEmail }}
+          </p>
+        </div>
+
+        <!-- ── Contraseña  ── -->
+        <div class="campo-grupo">
+          <label class="campo-label">Contraseña</label>
+          <div class="input-wrap" [class.input-error]="errContrasena">
+            <ion-input
+              [type]="mostrarContrasena ? 'text' : 'password'"
+              placeholder="Valor"
+              required
+              minlength="8"
+              pattern="^(?=.*[a-zA-Z])(?=.*\d).{8,}$"
+              [(ngModel)]="contrasena"
+              (ngModelChange)="validarContrasena()"
+            ></ion-input>
+            <ion-icon
+              class="toggle-eye"
+              [name]="mostrarContrasena ? 'eye-outline' : 'eye-off-outline'"
+              (click)="mostrarContrasena = !mostrarContrasena"
+            ></ion-icon>
+          </div>
+          <p class="error-msg" *ngIf="errContrasena">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            {{ errContrasena }}
+          </p>
+        </div>
+
+        <!-- ── CAPTCHA matemático ── -->
+        <div class="campo-grupo">
+          <label class="campo-label">Verificación</label>
+          <div class="captcha-wrap">
+
+            <!-- Pregunta matemática -->
+            <div class="captcha-pregunta">
+              <span>{{ captchaActual.a }}</span>
+              <span>{{ captchaActual.op }}</span>
+              <span>{{ captchaActual.b }}</span>
+              <span>=</span>
+              <span>?</span>
+            </div>
+
+            <!-- Campo respuesta -->
+            <ion-input
+              type="number"
+              placeholder="="
+              [(ngModel)]="respuestaCaptcha"
+              (ngModelChange)="captchaValido = null"
+              class="captcha-input"
+            ></ion-input>
+
+            <!-- Regenerar -->
+            <ion-icon
+              name="refresh-outline"
+              class="captcha-refresh"
+              (click)="generarCaptcha()"
+            ></ion-icon>
+          </div>
+
+          <!-- Estado visual del CAPTCHA -->
+          <p class="captcha-ok"  *ngIf="captchaValido === true">
+            <ion-icon name="checkmark-circle-outline"></ion-icon> Verificado
+          </p>
+          <p class="captcha-err" *ngIf="captchaValido === false">
+            <ion-icon name="alert-circle-outline"></ion-icon> Respuesta incorrecta
+          </p>
+        </div>
+
+        <!-- ── Mensaje del backend simulado── -->
+        <p class="mensaje-backend"
+          *ngIf="mensajeBackend"
+          [class.msg-success]="tipoMensaje === 'success'"
+          [class.msg-error]="tipoMensaje === 'danger'">
+          {{ mensajeBackend }}
+        </p>
+
+        <!-- Botón Iniciar sesión -->
+        <ion-button
+          expand="block"
+          class="btn-login"
+          (click)="iniciarSesion()"
+          [disabled]="cargandoLogin"
+        >
+          <ion-spinner *ngIf="cargandoLogin" name="crescent" slot="start"></ion-spinner>
+          {{ cargandoLogin ? 'Iniciando...' : 'Iniciar sesión' }}
+        </ion-button>
+
+        <!-- Enlace recuperar contraseña -->
+        <p class="recuperar-link" (click)="recuperarContrasena()">
+          ¿Olvidó la contraseña?
+        </p>
+      </div>
+      <!-- ── PANTALLA MFA ── -->
+<div class="login-card" *ngIf="mostrarMFA">
+  <h2 class="mfa-titulo">Verificación MFA</h2>
+  <p class="mfa-subtitulo">
+    Ingresa el código de 6 dígitos enviado a<br>
+    <strong>{{ emailMFA }}</strong>
+  </p>
+
+  <!-- Solo desarrollo -->
+  <div class="mfa-dev" *ngIf="codigoDevMFA">
+    <ion-icon name="information-circle-outline"></ion-icon>
+    Código de prueba: <strong>{{ codigoDevMFA }}</strong>
+  </div>
+
+  <div class="campo-grupo">
+    <label class="campo-label">Código MFA</label>
+    <div class="input-wrap" [class.input-error]="errMFA">
+      <ion-input
+        type="text"
+        placeholder="000000"
+        [(ngModel)]="codigoMFA"
+        maxlength="6"
+        (ngModelChange)="errMFA = ''"
+      ></ion-input>
+    </div>
+    <p class="error-msg" *ngIf="errMFA">
+      <ion-icon name="alert-circle-outline"></ion-icon>
+      {{ errMFA }}
+    </p>
+  </div>
+
+  <ion-button
+    expand="block"
+    class="btn-login"
+    (click)="verificarCodigoMFA()"
+    [disabled]="cargandoMFA"
+  >
+    <ion-spinner *ngIf="cargandoMFA" name="crescent" slot="start"></ion-spinner>
+    {{ cargandoMFA ? 'Verificando...' : 'Verificar Código' }}
+  </ion-button>
+
+  <p class="recuperar-link" (click)="mostrarMFA = false">
+    ← Volver al login
+  </p>
+</div>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,40 @@
+.campo-grupo {
+  margin-bottom: 16px;
+
+  .campo-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ion-color-dark);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  ion-input, ion-select, ion-textarea {
+    --background: var(--ion-color-light);
+    --padding-start: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--ion-color-light-shade);
+
+    &.input-error {
+      border-color: var(--ion-color-danger);
+    }
+  }
+
+  .error-msg {
+    color: var(--ion-color-danger);
+    font-size: 12px;
+    margin: 4px 0 0 4px;
+  }
+
+  .cargando-msg {
+    color: var(--ion-color-medium);
+    font-size: 12px;
+    margin: 4px 0 0 4px;
+  }
+}
+
+ion-footer {
+  ion-button {
+    margin-bottom: 8px;
+  }
+}

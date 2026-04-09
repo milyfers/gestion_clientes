@@ -1,0 +1,109 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Nuevo Proyecto</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrarModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <!-- Nombre -->
+  <div class="campo-grupo">
+    <ion-label class="campo-label">Nombre del Proyecto *</ion-label>
+    <ion-input
+      formControlName="nombre"
+      [formControl]="$any(f['nombre'])"
+      placeholder="Ej: Sistema Web Corporativo"
+      [class.input-error]="esInvalido('nombre')">
+    </ion-input>
+    <p class="error-msg" *ngIf="esInvalido('nombre')">{{ getMensajeError('nombre') }}</p>
+  </div>
+
+  <!-- Cliente -->
+  <div class="campo-grupo">
+    <ion-label class="campo-label">Cliente *</ion-label>
+    <ion-select
+      [formControl]="$any(f['clienteId'])"
+      placeholder="Seleccionar cliente"
+      [class.input-error]="esInvalido('clienteId')">
+      <ion-select-option
+        *ngFor="let cliente of clientes"
+        [value]="cliente.id">
+        {{ cliente.nombre }}
+      </ion-select-option>
+    </ion-select>
+    <p class="error-msg" *ngIf="esInvalido('clienteId')">{{ getMensajeError('clienteId') }}</p>
+    <p *ngIf="cargandoClientes" class="cargando-msg">Cargando clientes...</p>
+  </div>
+
+  <!-- Status -->
+  <div class="campo-grupo">
+    <ion-label class="campo-label">Estatus *</ion-label>
+    <ion-select
+      [formControl]="$any(f['status'])"
+      placeholder="Seleccionar estatus">
+      <ion-select-option
+        *ngFor="let s of statusOptions"
+        [value]="s">
+        {{ s }}
+      </ion-select-option>
+    </ion-select>
+  </div>
+
+  <!-- Presupuesto -->
+  <div class="campo-grupo">
+    <ion-label class="campo-label">Presupuesto (MXN)</ion-label>
+    <ion-input
+      type="number"
+      [formControl]="$any(f['presupuesto'])"
+      placeholder="Ej: 150000"
+      [class.input-error]="esInvalido('presupuesto')">
+    </ion-input>
+    <p class="error-msg" *ngIf="esInvalido('presupuesto')">{{ getMensajeError('presupuesto') }}</p>
+  </div>
+
+  <!-- Fecha Inicio -->
+  <div class="campo-grupo">
+    <ion-label class="campo-label">Fecha de Inicio *</ion-label>
+    <ion-input
+      type="date"
+      [formControl]="$any(f['fechaInicio'])"
+      [class.input-error]="esInvalido('fechaInicio')">
+    </ion-input>
+    <p class="error-msg" *ngIf="esInvalido('fechaInicio')">{{ getMensajeError('fechaInicio') }}</p>
+  </div>
+
+  <!-- Fecha Fin -->
+  <div class="campo-grupo">
+    <ion-label class="campo-label">Fecha de Fin</ion-label>
+    <ion-input
+      type="date"
+      [formControl]="$any(f['fechaFin'])">
+    </ion-input>
+  </div>
+
+  <!-- Descripción -->
+  <div class="campo-grupo">
+    <ion-label class="campo-label">Descripción</ion-label>
+    <ion-textarea
+      [formControl]="$any(f['descripcion'])"
+      placeholder="Describe el proyecto..."
+      rows="3">
+    </ion-textarea>
+  </div>
+
+</ion-content>
+
+<ion-footer class="ion-padding">
+  <ion-button expand="block" color="primary" (click)="guardarProyecto()">
+    <ion-icon name="save-outline" slot="start"></ion-icon>
+    Guardar Proyecto
+  </ion-button>
+  <ion-button expand="block" fill="outline" color="medium" (click)="cerrarModal()">
+    Cancelar
+  </ion-button>
+</ion-footer>

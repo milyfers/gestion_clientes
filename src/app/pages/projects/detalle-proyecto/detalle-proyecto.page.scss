@@ -1,0 +1,304 @@
+/* ===== Contenido ===== */
+ion-content {
+  --background: #f6f7fb;
+  --padding-top: 100px;
+  --padding-start: 24px;
+  --padding-end: 24px;
+  --padding-bottom: 24px;
+}
+
+/* =========================
+   BREADCRUMBS
+========================= */
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 20px 0;
+  padding: 0;
+  font-size: 13px;
+}
+
+.breadcrumb-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #666;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  
+  ion-icon {
+    font-size: 15px;
+  }
+  
+  &:hover {
+    color: #007bff;
+  }
+}
+
+.breadcrumb-separator {
+  font-size: 12px;
+  color: #bbb;
+}
+
+/* =========================
+   ENCABEZADO DEL PROYECTO
+========================= */
+.project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.project-title-section {
+  h1 {
+    font-size: 13px;
+    font-weight: 500;
+    color: #888;
+    margin: 0 0 4px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  h2 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+    line-height: 1.2;
+  }
+}
+
+.project-actions {
+  display: flex;
+  gap: 10px;
+  
+  ion-button {
+    --padding-start: 18px;
+    --padding-end: 18px;
+    height: 38px;
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: none;
+    
+    ion-icon {
+      font-size: 17px;
+      margin-right: 6px;
+    }
+  }
+}
+
+/* =========================
+   TABLA DE DOCUMENTOS
+========================= */
+.documents-table {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e5e5;
+}
+
+.table-header {
+  display: grid;
+  grid-template-columns: 60px 2fr 180px 200px;
+  gap: 16px;
+  padding: 14px 20px;
+  background: #fafafa;
+  font-weight: 600;
+  font-size: 11px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 1px solid #e5e5e5;
+  
+  .col-num {
+    text-align: center;
+  }
+  
+  .col-stat {
+    text-align: center;
+  }
+  
+  .col-act {
+    text-align: right;
+  }
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 60px 2fr 180px 200px;
+  gap: 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  align-items: center;
+  transition: background 0.12s ease;
+  
+  &:hover {
+    background: #f9fafb;
+  }
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.col-num {
+  font-weight: 600;
+  color: #aaa;
+  font-size: 14px;
+  text-align: center;
+}
+
+.col-doc {
+  .doc-name {
+    font-weight: 500;
+    color: #2a2a2a;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+}
+
+.col-stat {
+  display: flex;
+  justify-content: center;
+  
+  ion-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 6px 12px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border-radius: 4px;
+  }
+}
+
+.col-act {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+  
+  ion-button {
+    --padding-start: 12px;
+    --padding-end: 12px;
+    height: 30px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    
+    ion-icon {
+      font-size: 15px;
+      margin-right: 4px;
+    }
+    
+    &[fill="clear"] {
+      --color: #007bff;
+      
+      &:hover {
+        --background: rgba(0, 123, 255, 0.06);
+      }
+    }
+  }
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 1024px) {
+  .table-header,
+  .table-row {
+    grid-template-columns: 50px 1.5fr 150px 180px;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  ion-content {
+    --padding-start: 16px;
+    --padding-end: 16px;
+  }
+
+  .project-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .project-title-section {
+    h2 {
+      font-size: 22px;
+    }
+  }
+  
+  .project-actions {
+    width: 100%;
+    
+    ion-button {
+      flex: 1;
+    }
+  }
+  
+  .table-header {
+    display: none;
+  }
+  
+  .table-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 14px;
+  }
+  
+  .col-num {
+    display: none;
+  }
+  
+  .col-doc {
+    .doc-name {
+      font-size: 15px;
+      font-weight: 600;
+    }
+  }
+  
+  .col-stat {
+    justify-content: flex-start;
+  }
+  
+  .col-act {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    
+    ion-button {
+      flex: 1;
+      min-width: 85px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .breadcrumbs {
+    font-size: 12px;
+  }
+  
+  .project-title-section {
+    h1 {
+      font-size: 11px;
+    }
+    
+    h2 {
+      font-size: 19px;
+    }
+  }
+  
+  .project-actions {
+    flex-direction: column;
+    
+    ion-button {
+      width: 100%;
+    }
+  }
+}

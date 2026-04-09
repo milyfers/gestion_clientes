@@ -1,0 +1,322 @@
+/* ===== Fondo general ===== */
+ion-content {
+  --background: var(--ion-background-color);
+  --padding-top: 100px;
+  --padding-start: 24px;
+  --padding-end: 24px;
+  --padding-bottom: 24px;
+}
+
+/* ===== Breadcrumbs ===== */
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: var(--ion-color-medium);
+
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+    color: var(--ion-color-medium);
+    transition: color 0.2s;
+
+    &:hover:not(.active) {
+      color: var(--ion-color-primary);
+    }
+
+    &.active {
+      color: var(--ion-text-color);
+      font-weight: 600;
+    }
+
+    ion-icon {
+      font-size: 16px;
+    }
+  }
+
+  .breadcrumb-separator {
+    font-size: 14px;
+    color: var(--ion-color-medium);
+  }
+}
+
+/* ===== Título ===== */
+h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 20px;
+  color: var(--ion-text-color);
+}
+
+ion-title {
+  font-weight: 600;
+}
+
+/* ===== Barra superior ===== */
+.top-bar {
+  display: grid;
+  grid-template-columns: 1fr 160px auto auto auto auto auto;
+  gap: 12px;
+  margin-bottom: 18px;
+  align-items: center;
+}
+
+.top-bar ion-searchbar {
+  --background: var(--ion-card-background);
+  --box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  --border-radius: 8px;
+}
+
+.top-bar ion-select {
+  background: var(--ion-card-background);
+  color: var(--ion-text-color);
+  border-radius: 8px;
+  padding: 6px 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.top-bar ion-button {
+  height: 40px;
+  --border-radius: 8px;
+  text-transform: none;
+  font-weight: 500;
+}
+
+/* ===== Búsqueda Avanzada ===== */
+.advanced-search {
+  background: var(--ion-card-background);
+  border: 1px solid var(--ion-color-light-shade);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.advanced-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+
+  h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    color: var(--ion-text-color);
+
+    ion-icon {
+      font-size: 20px;
+      color: var(--ion-color-primary);
+    }
+  }
+}
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+
+  @media (max-width: 992px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.filter-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ion-color-medium);
+  }
+
+  ion-input.filter-input,
+  ion-select.filter-select {
+    --background: var(--ion-item-background);
+    --padding-start: 12px;
+    --padding-end: 12px;
+    border: 1px solid var(--ion-color-light-shade);
+    border-radius: 8px;
+    font-size: 14px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  }
+}
+
+.filter-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+
+  ion-button {
+    margin: 0;
+    height: 40px;
+    --border-radius: 8px;
+    text-transform: none;
+    font-weight: 500;
+  }
+}
+
+/* ===== Contador ===== */
+.results-info {
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: var(--ion-color-medium);
+
+  strong {
+    color: var(--ion-text-color);
+    font-weight: 600;
+  }
+
+  .advanced-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 12px;
+    padding: 4px 10px;
+    background: var(--ion-color-primary-tint);
+    color: var(--ion-color-primary);
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+
+    ion-icon {
+      font-size: 14px;
+    }
+  }
+}
+
+/* ===== Tabla ===== */
+.table {
+  background: var(--ion-card-background);
+  border-radius: 10px;
+  padding: 6px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* ===== Filas ===== */
+.table-row {
+  display: grid;
+  grid-template-columns: 60px 1.5fr 1fr 1.3fr 1.3fr 1fr 80px;
+  padding: 10px 18px;
+  align-items: center;
+  font-size: 14px;
+  color: var(--ion-text-color);
+}
+
+.table-row:not(.header) {
+  border-top: 1px solid var(--ion-color-light);
+}
+
+/* ===== Encabezado ===== */
+.table-row.header {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ion-color-medium);
+  text-transform: uppercase;
+  background: var(--ion-color-step-100);
+  border-top: none;
+}
+
+/* ===== Badge ===== */
+ion-badge {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+/* ===== Botón acción ===== */
+.table-row ion-button {
+  --padding-start: 0;
+  --padding-end: 0;
+  width: 32px;
+  height: 32px;
+  --border-radius: 50%;
+}
+
+/* ===== Paginación ===== */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--ion-color-medium);
+}
+
+.pagination .pages {
+  display: flex;
+  gap: 6px;
+}
+
+.pagination .page {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.pagination .page.active {
+  background: var(--ion-text-color);
+  color: var(--ion-background-color);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 992px) {
+  .table-row {
+    grid-template-columns: 60px 1.5fr 1fr 1.3fr 1fr 80px;
+  }
+
+  .table-row div:nth-child(3) {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .top-bar {
+    grid-template-columns: 1fr;
+  }
+
+  .table-row {
+    grid-template-columns: 1fr 1.2fr 1fr 70px;
+  }
+
+  .table-row div:nth-child(1),
+  .table-row div:nth-child(3),
+  .table-row div:nth-child(4) {
+    display: none;
+  }
+}

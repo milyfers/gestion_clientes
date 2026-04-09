@@ -1,0 +1,288 @@
+<ion-content #ionContent class="ion-padding" (mousemove)="onMouseMove($event)">
+
+  <!-- ── Botón notificaciones + panel (Parte 6) ── -->
+  <div class="notif-fab" (click)="toggleNotificaciones()">
+    <ion-icon name="notifications-outline"></ion-icon>
+    <span class="notif-badge" *ngIf="hayNotificacionesNuevas">
+      {{ notificaciones.length }}
+    </span>
+  </div>
+
+  <!-- Panel de notificaciones con transición suave -->
+  <div class="notif-panel" [class.notif-panel-visible]="mostrarNotificaciones">
+    <div class="notif-header">
+      <h3>Notificaciones</h3>
+      <button (click)="toggleNotificaciones()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="notif-empty" *ngIf="notificaciones.length === 0">
+      <ion-icon name="notifications-outline"></ion-icon>
+      <p>Sin notificaciones nuevas</p>
+    </div>
+
+    <div class="notif-item"
+         *ngFor="let notif of notificaciones"
+         [class.notif-nueva]="notif.nueva"
+         [style.borderLeftColor]="getColorNotificacion(notif.tipo)">
+      <div class="notif-texto">
+        <p>{{ notif.mensaje }}</p>
+        <span>{{ notif.timestamp | date:'HH:mm:ss' }}</span>
+      </div>
+      <button class="notif-cerrar" (click)="cerrarNotificacion(notif.id)">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="dashboard-content">
+
+    <!-- ── Bienvenida con parallax ── -->
+    <div class="bienvenida parallax-container" #parallaxEl>
+      <div class="avatar">
+        <ion-icon name="person-circle-outline"></ion-icon>
+      </div>
+      <h1 class="titulo-bienvenida">¡Bienvenido, {{ usuarioActual?.email?.split('@')[0] | titlecase }}!</h1>
+      <p class="subtitulo">
+        Acceso al sistema de gestión empresarial.<br>
+        <strong>Rol: {{ usuarioActual?.role }}</strong>
+      </p>
+      <div class="fecha-hora">
+        <ion-icon name="time-outline"></ion-icon>
+        <span>{{ fechaHora }}</span>
+      </div>
+    </div>
+
+    <!-- ── Buscador global con debounce ── -->
+    <div class="buscador-global scroll-reveal">
+      <div class="buscador-wrap">
+        <ion-icon name="search-outline"></ion-icon>
+        <input
+          type="text"
+          placeholder="Buscar clientes o proyectos..."
+          [(ngModel)]="textoBusqueda"
+          (input)="onBusquedaChange($event)"
+        />
+        <ion-spinner name="dots" *ngIf="buscando"></ion-spinner>
+        <ion-icon name="close-outline" *ngIf="textoBusqueda && !buscando"
+                  (click)="limpiarBusqueda()"></ion-icon>
+      </div>
+
+      <div class="resultados-wrap" *ngIf="resultadosBusqueda.length > 0 || sinResultados">
+        <div class="resultado-item" *ngFor="let r of resultadosBusqueda"
+             (click)="r.action()">
+          <ion-icon [name]="r.icon"></ion-icon>
+          <div>
+            <strong>{{ r.titulo }}</strong>
+            <span>{{ r.tipo }}</span>
+          </div>
+        </div>
+        <div class="sin-resultados" *ngIf="sinResultados">
+          Sin resultados para "{{ textoBusqueda }}"
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════
+         SUPERUSUARIO — métricas de desarrollo + todo
+    ═════════════════════════════════════════════════════════════ -->
+    @if (usuarioActual?.role === 'Superusuario') {
+
+      <!-- Carrusel -->
+      <div class="seccion-titulo scroll-reveal">
+        <h2>Novedades del sistema</h2>
+      </div>
+      <div class="carousel-wrapper scroll-reveal">
+        <div class="carousel-track" #carouselTrack
+             (touchstart)="onTouchStart($event)"
+             (touchend)="onTouchEnd($event)">
+          <div class="carousel-slide" *ngFor="let slide of slides">
+            <div class="slide-content" [style.background]="slide.color">
+              <ion-icon [name]="slide.icon"></ion-icon>
+              <h3>{{ slide.titulo }}</h3>
+              <p>{{ slide.descripcion }}</p>
+            </div>
+          </div>
+        </div>
+        <button class="carousel-btn prev" (click)="prevSlide()">&#8249;</button>
+        <button class="carousel-btn next" (click)="nextSlide()">&#8250;</button>
+        <div class="carousel-dots">
+          <span *ngFor="let slide of slides; let i = index"
+                class="dot" [class.active]="i === currentSlide"
+                (click)="goToSlide(i)">
+          </span>
+        </div>
+      </div>
+
+      <!-- Accesos rápidos -->
+      <div class="seccion-titulo scroll-reveal"><h2>Accesos rápidos</h2></div>
+      <div class="cards-grid">
+        <div class="card scroll-reveal magnetic-btn"
+             *ngFor="let card of quickCards"
+             (click)="card.action()"
+             (mousemove)="onMagneticMove($event)"
+             (mouseleave)="onMagneticLeave($event)">
+          <div class="card-icon"><ion-icon [name]="card.icon"></ion-icon></div>
+          <h3>{{ card.titulo }}</h3>
+          <p>{{ card.descripcion }}</p>
+        </div>
+      </div>
+
+      <!-- Panel info del sistema -->
+      <div class="seccion-titulo scroll-reveal"><h2>Información del sistema</h2></div>
+      <div class="scroll-reveal">
+        <button class="toggle-btn magnetic-btn"
+                (click)="togglePanel()"
+                (mousemove)="onMagneticMove($event)"
+                (mouseleave)="onMagneticLeave($event)">
+          {{ panelVisible ? 'Ocultar información' : 'Mostrar información' }}
+          <ion-icon [name]="panelVisible ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+        </button>
+        <div class="panel-colapsable"
+             [class.panel-visible]="panelVisible"
+             [style.maxHeight]="panelVisible ? panelHeight : '0px'">
+          <div class="panel-inner" #panelInner>
+            <div class="info-grid">
+              <div class="info-item" *ngFor="let item of infoItems">
+                <ion-icon [name]="item.icon"></ion-icon>
+                <div>
+                  <strong>{{ item.label }}</strong>
+                  <span>{{ item.valor }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Métricas de desarrollo — solo Superusuario -->
+      <div class="seccion-titulo scroll-reveal"><h2>Métricas de Rendimiento</h2></div>
+      <app-metrics-panel></app-metrics-panel>
+    }
+
+    <!-- ════════════════════════════════════════════════════════════
+         GERENCIA / ADMINISTRACIÓN — gráficas de negocio
+    ═════════════════════════════════════════════════════════════ -->
+    @if (usuarioActual?.role === 'Gerencia' || usuarioActual?.role === 'Administración') {
+
+      <!-- KPIs -->
+      <div class="seccion-titulo scroll-reveal"><h2>Resumen Ejecutivo</h2></div>
+      <div class="kpi-grid scroll-reveal">
+        <div class="kpi-card">
+          <ion-icon name="people-outline"></ion-icon>
+          <div class="kpi-info">
+            <span class="kpi-valor">--</span>
+            <span class="kpi-label">Clientes Activos</span>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <ion-icon name="folder-open-outline"></ion-icon>
+          <div class="kpi-info">
+            <span class="kpi-valor">--</span>
+            <span class="kpi-label">Proyectos en Curso</span>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <ion-icon name="stats-chart-outline"></ion-icon>
+          <div class="kpi-info">
+            <span class="kpi-valor">--</span>
+            <span class="kpi-label">Ventas del Mes</span>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <div class="kpi-info">
+            <span class="kpi-valor">--</span>
+            <span class="kpi-label">Tareas Completadas</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráfica de ventas simulada -->
+      <div class="seccion-titulo scroll-reveal"><h2>Gráfica de Ventas</h2></div>
+      <div class="grafica-card scroll-reveal">
+        <div class="grafica-placeholder">
+          <ion-icon name="stats-chart-outline"></ion-icon>
+          <p>Gráfica de ventas mensuales</p>
+          <span>Conecta tu endpoint de ventas para visualizar datos reales</span>
+        </div>
+      </div>
+
+      <!-- Proyectos activos -->
+      <div class="seccion-titulo scroll-reveal"><h2>Proyectos Activos</h2></div>
+      <div class="tabla-card scroll-reveal">
+        <div class="tabla-placeholder">
+          <ion-icon name="folder-open-outline"></ion-icon>
+          <p>Lista de proyectos en curso</p>
+          <span>Se cargarán los proyectos activos desde el backend</span>
+        </div>
+      </div>
+
+      <!-- Clientes recientes -->
+      <div class="seccion-titulo scroll-reveal"><h2>Clientes Recientes</h2></div>
+      <div class="tabla-card scroll-reveal">
+        <div class="tabla-placeholder">
+          <ion-icon name="people-outline"></ion-icon>
+          <p>Últimos clientes registrados</p>
+          <span>Se cargarán los clientes más recientes desde el backend</span>
+        </div>
+      </div>
+    }
+
+    <!-- ════════════════════════════════════════════════════════════
+         ROLES OPERATIVOS — Supervisión, Ingeniería, Vendedor
+    ═════════════════════════════════════════════════════════════ -->
+    @if (
+      usuarioActual?.role === 'Supervisión' ||
+      usuarioActual?.role === 'Ingeniería' ||
+      usuarioActual?.role === 'Vendedor'
+    ) {
+
+      <!-- Bienvenida y accesos rápidos -->
+      <div class="seccion-titulo scroll-reveal"><h2>Accesos rápidos</h2></div>
+      <div class="cards-grid">
+        <div class="card scroll-reveal magnetic-btn"
+             *ngFor="let card of quickCards"
+             (click)="card.action()"
+             (mousemove)="onMagneticMove($event)"
+             (mouseleave)="onMagneticLeave($event)">
+          <div class="card-icon"><ion-icon [name]="card.icon"></ion-icon></div>
+          <h3>{{ card.titulo }}</h3>
+          <p>{{ card.descripcion }}</p>
+        </div>
+      </div>
+
+      <!-- Clientes a su cargo -->
+      <div class="seccion-titulo scroll-reveal"><h2>Mis Clientes</h2></div>
+      <div class="tabla-card scroll-reveal">
+        <div class="tabla-placeholder">
+          <ion-icon name="people-outline"></ion-icon>
+          <p>Clientes asignados a tu cuenta</p>
+          <span>Conecta el endpoint filtrando por usuario_id</span>
+        </div>
+      </div>
+
+      <!-- Proyectos asignados -->
+      <div class="seccion-titulo scroll-reveal"><h2>Mis Proyectos</h2></div>
+      <div class="tabla-card scroll-reveal">
+        <div class="tabla-placeholder">
+          <ion-icon name="folder-open-outline"></ion-icon>
+          <p>Proyectos en los que participas</p>
+          <span>Conecta el endpoint filtrando por usuario_id</span>
+        </div>
+      </div>
+
+      <!-- Tareas pendientes -->
+      <div class="seccion-titulo scroll-reveal"><h2>Tareas Pendientes</h2></div>
+      <div class="tabla-card scroll-reveal">
+        <div class="tabla-placeholder">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <p>Tus tareas por completar</p>
+          <span>Conecta el endpoint de tareas filtrando por usuario_id</span>
+        </div>
+      </div>
+    }
+
+  </div>
+</ion-content>

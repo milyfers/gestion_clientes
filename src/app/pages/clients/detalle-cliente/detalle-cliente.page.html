@@ -1,0 +1,286 @@
+<ion-content class="ion-padding">
+
+  <!-- Loading -->
+  <div *ngIf="cargando" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando información...</p>
+  </div>
+
+  <!-- Breadcrumbs -->
+  <nav class="breadcrumbs">
+    <ng-container *ngFor="let crumb of breadcrumbs; let last = last">
+      <a *ngIf="crumb.url && !crumb.active" [routerLink]="crumb.url" class="breadcrumb-item">
+        <ion-icon *ngIf="crumb.icon" [name]="crumb.icon"></ion-icon>
+        <span>{{ crumb.label }}</span>
+      </a>
+      <span *ngIf="crumb.active || (!crumb.url && crumb.label)" class="breadcrumb-item active">
+        {{ crumb.label }}
+      </span>
+      <ion-icon *ngIf="!last" name="chevron-forward-outline" class="breadcrumb-separator"></ion-icon>
+    </ng-container>
+  </nav>
+
+  <!-- Contenido -->
+  <div *ngIf="!cargando && cliente" class="detalle-container">
+
+    <!-- Cabecera -->
+    <div class="cabecera-cliente">
+      <div class="avatar-container">
+        <div class="avatar">
+          <ion-icon name="business-outline"></ion-icon>
+        </div>
+      </div>
+      <div class="info-principal">
+        <h1>{{ modoEdicion ? clienteEditado?.nombre : cliente.nombre }}</h1>
+        <p class="cliente-id">ID: {{ cliente.id }}</p>
+        <ion-badge [color]="getEstadoColor(modoEdicion ? clienteEditado?.status! : cliente.status)" class="badge-estado">
+          {{ modoEdicion ? clienteEditado?.status : cliente.status }}
+        </ion-badge>
+      </div>
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="botones-accion-header">
+
+      <!-- Modo lectura -->
+      <ng-container *ngIf="!modoEdicion">
+        <ion-button expand="block" color="dark" (click)="activarEdicion()">
+          <ion-icon name="create-outline" slot="start"></ion-icon>
+          Editar
+        </ion-button>
+        <ion-button expand="block" color="danger" fill="outline" (click)="eliminarCliente()">
+          <ion-icon name="trash-outline" slot="start"></ion-icon>
+          Eliminar
+        </ion-button>
+      </ng-container>
+
+      <!-- Modo edición -->
+      <ng-container *ngIf="modoEdicion">
+        <ion-button expand="block" color="success" (click)="guardarEdicion()" [disabled]="guardando">
+          <ion-icon name="save-outline" slot="start"></ion-icon>
+          {{ guardando ? 'Guardando...' : 'Guardar' }}
+        </ion-button>
+        <ion-button expand="block" color="medium" fill="outline" (click)="cancelarEdicion()" [disabled]="guardando">
+          <ion-icon name="close-outline" slot="start"></ion-icon>
+          Cancelar
+        </ion-button>
+      </ng-container>
+
+    </div>
+
+    <!-- ═══ INFORMACIÓN DE CONTACTO ═══ -->
+    <ion-card class="seccion-card">
+      <ion-card-header (click)="toggleSeccion('contacto')" class="seccion-header">
+        <div class="header-content">
+          <ion-card-title>Información de Contacto</ion-card-title>
+          <ion-icon [name]="seccionesAbiertas.contacto ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+        </div>
+      </ion-card-header>
+
+      <ion-card-content *ngIf="seccionesAbiertas.contacto" class="seccion-content">
+
+        <!-- Contacto -->
+        <div class="campo-info">
+          <div class="campo-label">
+            <ion-icon name="person-outline"></ion-icon>
+            <span>Contacto</span>
+          </div>
+          <div class="campo-valor" *ngIf="!modoEdicion">{{ cliente.contacto }}</div>
+          <ion-input *ngIf="modoEdicion" [(ngModel)]="clienteEditado!.contacto" placeholder="Nombre de contacto" class="input-edicion"></ion-input>
+        </div>
+
+        <!-- Teléfono -->
+        <div class="campo-info">
+          <div class="campo-label">
+            <ion-icon name="call-outline"></ion-icon>
+            <span>Teléfono</span>
+          </div>
+          <div class="campo-valor" *ngIf="!modoEdicion">
+            <a href="tel:{{ cliente.telefono }}">{{ cliente.telefono }}</a>
+          </div>
+          <ion-input *ngIf="modoEdicion" type="tel" [(ngModel)]="clienteEditado!.telefono" placeholder="10 dígitos" maxlength="10" class="input-edicion"></ion-input>
+        </div>
+
+        <!-- Email -->
+        <div class="campo-info">
+          <div class="campo-label">
+            <ion-icon name="mail-outline"></ion-icon>
+            <span>Email</span>
+          </div>
+          <div class="campo-valor" *ngIf="!modoEdicion">
+            <a href="mailto:{{ cliente.email }}">{{ cliente.email }}</a>
+          </div>
+          <ion-input *ngIf="modoEdicion" type="email" [(ngModel)]="clienteEditado!.email" placeholder="correo@empresa.com" class="input-edicion"></ion-input>
+        </div>
+
+        <!-- Ciudad -->
+        <div class="campo-info">
+          <div class="campo-label">
+            <ion-icon name="location-outline"></ion-icon>
+            <span>Ciudad</span>
+          </div>
+          <div class="campo-valor" *ngIf="!modoEdicion">{{ cliente.ciudad }}</div>
+          <ion-input *ngIf="modoEdicion" [(ngModel)]="clienteEditado!.ciudad" placeholder="Ciudad" class="input-edicion"></ion-input>
+        </div>
+
+        <!-- Estado -->
+        <div class="campo-info">
+          <div class="campo-label">
+            <ion-icon name="map-outline"></ion-icon>
+            <span>Estado</span>
+          </div>
+          <div class="campo-valor" *ngIf="!modoEdicion">{{ cliente.estado }}</div>
+          <ion-select *ngIf="modoEdicion" [(ngModel)]="clienteEditado!.estado" placeholder="Seleccionar estado" class="input-edicion">
+            <ion-select-option *ngFor="let est of estados" [value]="est">{{ est }}</ion-select-option>
+          </ion-select>
+        </div>
+
+      </ion-card-content>
+    </ion-card>
+
+    <!-- ═══ DATOS FISCALES ═══ -->
+    <ion-card class="seccion-card">
+      <ion-card-header (click)="toggleSeccion('fiscales')" class="seccion-header">
+        <div class="header-content">
+          <ion-card-title>Datos Fiscales</ion-card-title>
+          <ion-icon [name]="seccionesAbiertas.fiscales ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+        </div>
+      </ion-card-header>
+
+      <ion-card-content *ngIf="seccionesAbiertas.fiscales" class="seccion-content">
+
+        <!-- Nombre -->
+        <div class="campo-info" *ngIf="modoEdicion">
+          <div class="campo-label">
+            <ion-icon name="person-outline"></ion-icon>
+            <span>Nombre <span style="color:red">*</span></span>
+          </div>
+          <ion-input [(ngModel)]="clienteEditado!.nombre" placeholder="Nombre del cliente" class="input-edicion"></ion-input>
+        </div>
+
+        <!-- RFC -->
+        <div class="campo-info">
+          <div class="campo-label">
+            <ion-icon name="document-text-outline"></ion-icon>
+            <span>RFC</span>
+          </div>
+          <div class="campo-valor" *ngIf="!modoEdicion">{{ cliente.rfc }}</div>
+          <ion-input *ngIf="modoEdicion" [(ngModel)]="clienteEditado!.rfc" placeholder="ABC123456XYZ" class="input-edicion"></ion-input>
+        </div>
+
+        <!-- Razón Social -->
+        <div class="campo-info">
+          <div class="campo-label">
+            <ion-icon name="business-outline"></ion-icon>
+            <span>Razón Social</span>
+          </div>
+          <div class="campo-valor" *ngIf="!modoEdicion">{{ cliente.razonSocial }}</div>
+          <ion-input *ngIf="modoEdicion" [(ngModel)]="clienteEditado!.razonSocial" placeholder="Razón social" class="input-edicion"></ion-input>
+        </div>
+
+        <!-- Estatus (solo en edición) -->
+        <div class="campo-info" *ngIf="modoEdicion">
+          <div class="campo-label">
+            <ion-icon name="checkmark-circle-outline"></ion-icon>
+            <span>Estatus</span>
+          </div>
+          <ion-select [(ngModel)]="clienteEditado!.status" placeholder="Seleccionar" class="input-edicion">
+            <ion-select-option *ngFor="let s of statusOptions" [value]="s">{{ s }}</ion-select-option>
+          </ion-select>
+        </div>
+
+        <!-- Dirección Fiscal -->
+        <div class="campo-info" *ngIf="cliente.direccionFiscal || modoEdicion">
+          <div class="campo-label">
+            <ion-icon name="home-outline"></ion-icon>
+            <span>Dirección Fiscal</span>
+          </div>
+          <div class="campo-valor" *ngIf="!modoEdicion">{{ cliente.direccionFiscal }}</div>
+          <ion-textarea *ngIf="modoEdicion" [(ngModel)]="clienteEditado!.direccionFiscal" placeholder="Calle, número, colonia, C.P." rows="2" class="input-edicion"></ion-textarea>
+        </div>
+
+        <!-- Forma de Pago -->
+        <div class="campo-info" *ngIf="cliente.formaPago || modoEdicion">
+          <div class="campo-label">
+            <ion-icon name="card-outline"></ion-icon>
+            <span>Forma de Pago</span>
+          </div>
+          <div class="campo-valor" *ngIf="!modoEdicion">
+            {{ getFormaPagoLabel(cliente.formaPago!) }}
+            <span class="codigo-fiscal">({{ cliente.formaPago }})</span>
+          </div>
+          <ion-select *ngIf="modoEdicion" [(ngModel)]="clienteEditado!.formaPago" placeholder="Seleccionar" class="input-edicion">
+            <ion-select-option *ngFor="let fp of formasPago" [value]="fp.codigo">{{ fp.codigo }} - {{ fp.label }}</ion-select-option>
+          </ion-select>
+        </div>
+
+        <!-- Uso CFDI -->
+        <div class="campo-info" *ngIf="cliente.usoCFDI || modoEdicion">
+          <div class="campo-label">
+            <ion-icon name="receipt-outline"></ion-icon>
+            <span>Uso de CFDI</span>
+          </div>
+          <div class="campo-valor" *ngIf="!modoEdicion">
+            {{ getUsoCFDILabel(cliente.usoCFDI!) }}
+            <span class="codigo-fiscal">({{ cliente.usoCFDI }})</span>
+          </div>
+          <ion-select *ngIf="modoEdicion" [(ngModel)]="clienteEditado!.usoCFDI" placeholder="Seleccionar" class="input-edicion">
+            <ion-select-option *ngFor="let uc of usosCFDI" [value]="uc.codigo">{{ uc.codigo }} - {{ uc.label }}</ion-select-option>
+          </ion-select>
+        </div>
+
+      </ion-card-content>
+    </ion-card>
+
+    <!-- ═══ PROYECTOS ═══ -->
+    <ion-card class="seccion-card" *ngIf="cliente.proyectos !== undefined">
+      <ion-card-header (click)="toggleSeccion('proyectos')" class="seccion-header">
+        <div class="header-content">
+          <ion-card-title>
+            Proyectos
+            <ion-badge color="primary" class="contador-badge">{{ cliente.proyectos }}</ion-badge>
+          </ion-card-title>
+          <ion-icon [name]="seccionesAbiertas.proyectos ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+        </div>
+      </ion-card-header>
+
+      <ion-card-content *ngIf="seccionesAbiertas.proyectos" class="seccion-content proyectos-content">
+        <div *ngIf="cliente.proyectos === 0" class="sin-proyectos">
+          <ion-icon name="briefcase-outline"></ion-icon>
+          <p>No hay proyectos asignados</p>
+        </div>
+        <div *ngIf="cliente.proyectos && cliente.proyectos > 0" class="info-proyectos">
+          <p>Este cliente tiene <strong>{{ cliente.proyectos }}</strong> proyecto(s) activo(s)</p>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- ═══ METADATA ═══ -->
+    <ion-card class="seccion-card metadata-card">
+      <ion-card-content>
+        <div class="metadata-info">
+          <div class="metadata-item">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <div>
+              <p class="metadata-label">Fecha de Registro</p>
+              <p class="metadata-valor">{{ formatearFecha(cliente.fechaRegistro) }}</p>
+            </div>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Botones guardar/cancelar al final (comodidad en móvil) -->
+    <div class="botones-accion-footer" *ngIf="modoEdicion">
+      <ion-button expand="block" color="success" (click)="guardarEdicion()" [disabled]="guardando">
+        <ion-icon name="save-outline" slot="start"></ion-icon>
+        {{ guardando ? 'Guardando...' : 'Guardar Cambios' }}
+      </ion-button>
+      <ion-button expand="block" color="medium" fill="outline" (click)="cancelarEdicion()" [disabled]="guardando">
+        <ion-icon name="close-outline" slot="start"></ion-icon>
+        Cancelar
+      </ion-button>
+    </div>
+
+  </div>
+</ion-content>

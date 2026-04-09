@@ -1,0 +1,54 @@
+<ion-content class="error-page">
+  <div class="error-container">
+    
+    <!-- Ilustración de error -->
+    <div class="error-illustration">
+      <div class="error-code">404</div>
+      <ion-icon name="search-outline" class="search-icon"></ion-icon>
+    </div>
+
+    <!-- Mensaje de error -->
+    <div class="error-content">
+      <h1>Página no encontrada</h1>
+      <p class="error-message">
+        Lo sentimos, la página que estás buscando no existe o ha sido movida.
+      </p>
+      <p class="error-hint">
+        Verifica la URL o regresa al inicio para continuar navegando.
+      </p>
+    </div>
+
+    <!-- Acciones -->
+    <div class="error-actions">
+      <ion-button expand="block" (click)="goHome()">
+        <ion-icon name="home-outline" slot="start"></ion-icon>
+        Ir al Inicio
+      </ion-button>
+      
+      <ion-button expand="block" fill="outline" (click)="goBack()">
+        <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
+        Regresar
+      </ion-button>
+    </div>
+
+    <!-- Enlaces útiles -->
+    <div class="helpful-links">
+      <p class="links-title">Enlaces útiles:</p>
+      <div class="links-grid">
+        <a [routerLink]="['/clients']" class="link-item">
+          <span>Clientes</span>
+        </a>
+        <a [routerLink]="['/projects']" class="link-item">
+          <span>Proyectos</span>
+        </a>
+        <a [routerLink]="['/reports']" class="link-item">
+          <span>Reportes</span>
+        </a>
+        <a [routerLink]="['/tools']" class="link-item">
+          <span>Herramientas</span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</ion-content>

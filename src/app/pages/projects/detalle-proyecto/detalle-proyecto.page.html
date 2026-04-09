@@ -1,0 +1,202 @@
+<ion-content class="ion-padding">
+
+  <!-- Loading -->
+  <div *ngIf="cargando" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando proyecto...</p>
+  </div>
+
+  <!-- Breadcrumbs -->
+  <nav class="breadcrumbs">
+    <ng-container *ngFor="let crumb of breadcrumbs; let last = last">
+      <a *ngIf="crumb.url && !crumb.active" [routerLink]="crumb.url" class="breadcrumb-item">
+        <ion-icon *ngIf="crumb.icon" [name]="crumb.icon"></ion-icon>
+        <span>{{ crumb.label }}</span>
+      </a>
+      <span *ngIf="crumb.active || (!crumb.url && crumb.label)" class="breadcrumb-item active">
+        {{ crumb.label }}
+      </span>
+      <ion-icon *ngIf="!last" name="chevron-forward-outline" class="breadcrumb-separator"></ion-icon>
+    </ng-container>
+  </nav>
+
+  <!-- Contenido -->
+  <div *ngIf="!cargando && proyecto" class="detalle-container">
+
+    <!-- Encabezado -->
+    <div class="project-header">
+      <div class="project-title-section">
+        <p class="project-id">ID: {{ proyecto.id }}</p>
+        <h1>{{ modoEdicion ? proyectoEditado?.nombre : proyecto.nombre }}</h1>
+        <ion-badge [color]="getStatusColor(modoEdicion ? proyectoEditado?.status! : proyecto.status)">
+          {{ modoEdicion ? proyectoEditado?.status : proyecto.status }}
+        </ion-badge>
+      </div>
+
+      <!-- Botones modo lectura -->
+      <div class="project-actions" *ngIf="!modoEdicion">
+        <ion-button fill="outline" color="dark" (click)="activarEdicion()">
+          <ion-icon name="create-outline" slot="start"></ion-icon>
+          Editar
+        </ion-button>
+        <ion-button fill="outline" (click)="exportarProyecto()">
+          <ion-icon name="download-outline" slot="start"></ion-icon>
+          Exportar
+        </ion-button>
+        <ion-button fill="outline" color="danger" (click)="eliminarProyecto()">
+          <ion-icon name="trash-outline" slot="start"></ion-icon>
+          Eliminar
+        </ion-button>
+      </div>
+
+      <!-- Botones modo edición -->
+      <div class="project-actions" *ngIf="modoEdicion">
+        <ion-button color="success" (click)="guardarEdicion()" [disabled]="guardando">
+          <ion-icon name="save-outline" slot="start"></ion-icon>
+          {{ guardando ? 'Guardando...' : 'Guardar' }}
+        </ion-button>
+        <ion-button fill="outline" color="medium" (click)="cancelarEdicion()" [disabled]="guardando">
+          <ion-icon name="close-outline" slot="start"></ion-icon>
+          Cancelar
+        </ion-button>
+      </div>
+    </div>
+
+    <!-- ═══ INFORMACIÓN DEL PROYECTO ═══ -->
+    <ion-card class="info-card">
+      <ion-card-header>
+        <ion-card-title>Información del Proyecto</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+
+        <!-- Nombre -->
+        <div class="campo-info" *ngIf="modoEdicion">
+          <div class="campo-label">
+            <ion-icon name="document-text-outline"></ion-icon>
+            <span>Nombre <span style="color:red">*</span></span>
+          </div>
+          <ion-input [(ngModel)]="proyectoEditado!.nombre" placeholder="Nombre del proyecto" class="input-edicion"></ion-input>
+        </div>
+
+        <!-- Cliente -->
+        <div class="campo-info">
+          <div class="campo-label">
+            <ion-icon name="person-outline"></ion-icon>
+            <span>Cliente</span>
+          </div>
+          <div class="campo-valor" *ngIf="!modoEdicion">{{ proyecto.cliente }}</div>
+          <ion-input *ngIf="modoEdicion" [(ngModel)]="proyectoEditado!.cliente" placeholder="Nombre del cliente" class="input-edicion"></ion-input>
+        </div>
+
+        <!-- Estatus -->
+        <div class="campo-info">
+          <div class="campo-label">
+            <ion-icon name="checkmark-circle-outline"></ion-icon>
+            <span>Estatus</span>
+          </div>
+          <div class="campo-valor" *ngIf="!modoEdicion">
+            <ion-badge [color]="getStatusColor(proyecto.status)">{{ proyecto.status }}</ion-badge>
+          </div>
+          <ion-select *ngIf="modoEdicion" [(ngModel)]="proyectoEditado!.status" placeholder="Seleccionar" class="input-edicion">
+            <ion-select-option *ngFor="let s of statusOptions" [value]="s">{{ s }}</ion-select-option>
+          </ion-select>
+        </div>
+
+        <!-- Presupuesto -->
+        <div class="campo-info">
+          <div class="campo-label">
+            <ion-icon name="cash-outline"></ion-icon>
+            <span>Presupuesto</span>
+          </div>
+          <div class="campo-valor" *ngIf="!modoEdicion">{{ formatearPresupuesto(proyecto.presupuesto) }}</div>
+          <ion-input *ngIf="modoEdicion" type="number" [(ngModel)]="proyectoEditado!.presupuesto" placeholder="0.00" class="input-edicion"></ion-input>
+        </div>
+
+        <!-- Fecha Inicio -->
+        <div class="campo-info">
+          <div class="campo-label">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <span>Fecha Inicio</span>
+          </div>
+          <div class="campo-valor" *ngIf="!modoEdicion">{{ formatearFecha(proyecto.fechaInicio) }}</div>
+          <ion-input *ngIf="modoEdicion" type="date" [(ngModel)]="proyectoEditado!.fechaInicio" class="input-edicion"></ion-input>
+        </div>
+
+        <!-- Fecha Fin -->
+        <div class="campo-info">
+          <div class="campo-label">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <span>Fecha Fin</span>
+          </div>
+          <div class="campo-valor" *ngIf="!modoEdicion">{{ formatearFecha(proyecto.fechaFin) }}</div>
+          <ion-input *ngIf="modoEdicion" type="date" [(ngModel)]="proyectoEditado!.fechaFin" class="input-edicion"></ion-input>
+        </div>
+
+        <!-- Descripción -->
+        <div class="campo-info">
+          <div class="campo-label">
+            <ion-icon name="document-text-outline"></ion-icon>
+            <span>Descripción</span>
+          </div>
+          <div class="campo-valor" *ngIf="!modoEdicion">{{ proyecto.descripcion || 'Sin descripción' }}</div>
+          <ion-textarea *ngIf="modoEdicion" [(ngModel)]="proyectoEditado!.descripcion" placeholder="Descripción del proyecto" rows="3" class="input-edicion"></ion-textarea>
+        </div>
+
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Botones guardar al final en móvil -->
+    <div class="botones-footer" *ngIf="modoEdicion">
+      <ion-button expand="block" color="success" (click)="guardarEdicion()" [disabled]="guardando">
+        <ion-icon name="save-outline" slot="start"></ion-icon>
+        {{ guardando ? 'Guardando...' : 'Guardar Cambios' }}
+      </ion-button>
+      <ion-button expand="block" fill="outline" color="medium" (click)="cancelarEdicion()" [disabled]="guardando">
+        <ion-icon name="close-outline" slot="start"></ion-icon>
+        Cancelar
+      </ion-button>
+    </div>
+
+    <!-- ═══ TABLA DE DOCUMENTOS ═══ -->
+    <ion-card class="docs-card">
+      <ion-card-header>
+        <ion-card-title>Documentos del Proyecto</ion-card-title>
+      </ion-card-header>
+      <ion-card-content class="ion-no-padding">
+
+        <div class="documents-table">
+          <div class="table-header">
+            <div class="col-num">#</div>
+            <div class="col-doc">DOCUMENTO</div>
+            <div class="col-stat">ESTADO</div>
+            <div class="col-act">ACCIONES</div>
+          </div>
+
+          <div class="table-row" *ngFor="let doc of documents; let i = index">
+            <div class="col-num">{{ i + 1 }}.</div>
+            <div class="col-doc">
+              <span class="doc-name">{{ doc.name }}</span>
+            </div>
+            <div class="col-stat">
+              <ion-badge [color]="getStatusColor(doc.status)">
+                {{ doc.status }}
+              </ion-badge>
+            </div>
+            <div class="col-act">
+              <ion-button fill="clear" size="small" (click)="viewDocument(doc)">
+                <ion-icon name="eye-outline"></ion-icon>
+                VER
+              </ion-button>
+              <ion-button fill="clear" size="small" (click)="editDocument(doc)">
+                <ion-icon name="create-outline"></ion-icon>
+                EDITAR
+              </ion-button>
+            </div>
+          </div>
+        </div>
+
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+</ion-content>

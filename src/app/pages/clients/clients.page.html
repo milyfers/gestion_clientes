@@ -1,0 +1,206 @@
+<ion-content class="ion-padding">
+  <!-- Breadcrumbs -->
+  <nav class="breadcrumbs">
+    <a [routerLink]="['/home']" class="breadcrumb-item">
+      <ion-icon name="home-outline"></ion-icon>
+      <span>Inicio</span>
+    </a>
+    <ion-icon name="chevron-forward-outline" class="breadcrumb-separator"></ion-icon>
+    <span class="breadcrumb-item active">Clientes</span>
+  </nav>
+
+  <!-- Título -->
+  <h1>Gestión de Clientes</h1>
+
+  <!-- Barra de búsqueda simple -->
+  <div class="top-bar">
+    <ion-searchbar
+      placeholder="Buscar por nombre, teléfono..."
+      [(ngModel)]="searchText"
+      debounce="500"
+      animated="true">
+    </ion-searchbar>
+
+    <ion-select 
+      [(ngModel)]="filterStatus"
+      (ionChange)="onStatusChange()">
+      <ion-select-option value="Todos">Todos</ion-select-option>
+      <ion-select-option value="Prospecto">Prospecto</ion-select-option>
+      <ion-select-option value="Con proyecto">Con proyecto</ion-select-option>
+    </ion-select>
+
+    <ion-button fill="outline" (click)="toggleAdvancedSearch()">
+      <ion-icon slot="start" name="filter-outline"></ion-icon>
+      Búsqueda Avanzada
+    </ion-button>
+
+    <ion-button color="primary" (click)="abrirModalNuevoCliente()">
+      <ion-icon slot="start" name="person-add-outline"></ion-icon>
+      Nuevo Cliente
+    </ion-button>
+
+    <ion-button fill="outline" (click)="exportarDatos()">
+      <ion-icon slot="start" name="download-outline"></ion-icon>
+      Exportar
+    </ion-button>
+
+    <ion-button fill="outline">
+      <ion-icon slot="start" name="print-outline"></ion-icon>
+      Imprimir
+    </ion-button>
+  </div>
+
+  <!-- BÚSQUEDA AVANZADA -->
+  <div class="advanced-search" *ngIf="showAdvancedSearch">
+    <div class="advanced-header">
+      <h3>
+        <ion-icon name="options-outline"></ion-icon>
+        Filtros Avanzados
+      </h3>
+      <ion-button fill="clear" size="small" (click)="toggleAdvancedSearch()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </div>
+
+    <div class="filters-grid">
+      <div class="filter-item">
+        <label>Nombre Completo</label>
+        <ion-input type="text" placeholder="Ej: Empresa ABC" [(ngModel)]="advancedFilters.nombre" class="filter-input"></ion-input>
+      </div>
+      <div class="filter-item">
+        <label>RFC</label>
+        <ion-input type="text" placeholder="Ej: ABC123456" [(ngModel)]="advancedFilters.rfc" class="filter-input"></ion-input>
+      </div>
+      <div class="filter-item">
+        <label>Ciudad</label>
+        <ion-select [(ngModel)]="advancedFilters.ciudad" placeholder="Seleccionar" class="filter-select">
+          <ion-select-option value="">Todas</ion-select-option>
+          <ion-select-option value="Aguascalientes">Aguascalientes</ion-select-option>
+          <ion-select-option value="Calvillo">Calvillo</ion-select-option>
+          <ion-select-option value="Jesús María">Jesús María</ion-select-option>
+        </ion-select>
+      </div>
+      <div class="filter-item">
+        <label>Estatus</label>
+        <ion-select [(ngModel)]="advancedFilters.status" placeholder="Seleccionar" class="filter-select">
+          <ion-select-option value="">Todos</ion-select-option>
+          <ion-select-option value="Prospecto">Prospecto</ion-select-option>
+          <ion-select-option value="Con proyecto">Con proyecto</ion-select-option>
+        </ion-select>
+      </div>
+      <div class="filter-item">
+        <label>Fecha Registro (Desde)</label>
+        <ion-input type="date" [(ngModel)]="advancedFilters.fechaDesde" class="filter-input"></ion-input>
+      </div>
+      <div class="filter-item">
+        <label>Fecha Registro (Hasta)</label>
+        <ion-input type="date" [(ngModel)]="advancedFilters.fechaHasta" class="filter-input"></ion-input>
+      </div>
+    </div>
+
+    <div class="filter-actions">
+      <ion-button expand="block" (click)="aplicarFiltrosAvanzados()">
+        <ion-icon slot="start" name="search-outline"></ion-icon>
+        Buscar
+      </ion-button>
+      <ion-button expand="block" fill="outline" color="medium" (click)="limpiarFiltrosAvanzados()">
+        <ion-icon slot="start" name="refresh-outline"></ion-icon>
+        Limpiar Filtros
+      </ion-button>
+    </div>
+  </div>
+
+  <!-- Contador de resultados -->
+  <div class="results-info">
+    <p *ngIf="!loading">
+      Mostrando <strong>{{ clientesFiltrados.length }}</strong> de <strong>{{ todosLosClientes.length }}</strong> clientes
+      <span *ngIf="advancedSearchActive" class="advanced-badge">
+        <ion-icon name="funnel-outline"></ion-icon>
+        Búsqueda avanzada activa
+      </span>
+    </p>
+  </div>
+
+  <!-- Tabla con ordenamiento -->
+  <div class="table">
+    <div class="table-row header">
+
+      <!-- Columna ID -->
+      <div class="col-sortable" (click)="ordenarPor('id')">
+        ID
+        <ion-icon [name]="getIconoOrden('id')"></ion-icon>
+      </div>
+
+      <!-- Columna Nombre -->
+      <div class="col-sortable" (click)="ordenarPor('nombre')">
+        Nombre
+        <ion-icon [name]="getIconoOrden('nombre')"></ion-icon>
+      </div>
+
+      <!-- Columna RFC -->
+      <div class="col-sortable" (click)="ordenarPor('rfc')">
+        RFC
+        <ion-icon [name]="getIconoOrden('rfc')"></ion-icon>
+      </div>
+
+      <!-- Columna Teléfono (sin orden) -->
+      <div>Teléfono</div>
+
+      <!-- Columna Ciudad -->
+      <div class="col-sortable" (click)="ordenarPor('ciudad')">
+        Ciudad
+        <ion-icon [name]="getIconoOrden('ciudad')"></ion-icon>
+      </div>
+
+      <!-- Columna Estatus -->
+      <div class="col-sortable" (click)="ordenarPor('status')">
+        Estatus
+        <ion-icon [name]="getIconoOrden('status')"></ion-icon>
+      </div>
+
+      <div>Acción</div>
+    </div>
+
+    <div class="table-row" *ngFor="let client of clientesFiltrados">
+      <div>{{ client.id }}</div>
+      <div>{{ client.nombre }}</div>
+      <div>{{ client.rfc }}</div>
+      <div>{{ client.telefono }}</div>
+      <div>{{ client.ciudad }}</div>
+      <div>
+        <ion-badge [color]="client.status === 'Con proyecto' ? 'primary' : 'medium'">
+          {{ client.status }}
+        </ion-badge>
+      </div>
+      <div>
+        <ion-button fill="clear" size="small" (click)="verDetalleCliente(client)">
+          <ion-icon name="eye-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+
+    <!-- Sin resultados -->
+    <div class="table-row" *ngIf="clientesFiltrados.length === 0 && !loading">
+      <div style="text-align: center; padding: 40px; grid-column: 1 / -1;">
+        <ion-icon name="search-outline" style="font-size: 48px; color: var(--ion-color-medium);"></ion-icon>
+        <h3>No se encontraron resultados</h3>
+        <p>Intenta con otros términos de búsqueda</p>
+      </div>
+    </div>
+  </div>
+
+  <ion-button 
+  *ngIf="!environment.production"
+  expand="block"
+  color="medium"
+  (click)="exportarLogsSeguridad()">
+
+  Exportar Logs (Development)
+</ion-button>
+
+<!-- Botón .log (nuevo) -->
+<ion-button (click)="logger.exportLogsAsText()">
+  Exportar .log
+</ion-button>
+
+</ion-content>

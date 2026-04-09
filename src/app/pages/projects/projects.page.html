@@ -1,0 +1,201 @@
+<ion-content class="ion-padding">
+
+  <!-- Breadcrumbs -->
+  <nav class="breadcrumbs">
+    <a [routerLink]="['/dashboard']" class="breadcrumb-item">
+      <ion-icon name="home-outline"></ion-icon>
+      <span>Inicio</span>
+    </a>
+    <ion-icon name="chevron-forward-outline" class="breadcrumb-separator"></ion-icon>
+    <span class="breadcrumb-item active">Proyectos</span>
+  </nav>
+
+  <!-- Título -->
+  <h1>Mis Proyectos</h1>
+
+  <!-- ═══ ESTADÍSTICAS ═══ -->
+<div 
+  class="stats-grid"
+  cdkDropList
+  cdkDropListOrientation="horizontal"
+  (cdkDropListDropped)="drop($event)"
+>
+
+  <div 
+    class="stat-card"
+    *ngFor="let stat of statsCards"
+    cdkDrag
+    [ngClass]="stat.class"
+    (click)="filterStatus = stat.key; onStatusChange()"
+  >
+    <span class="stat-number">{{ stat.value() }}</span>
+    <span class="stat-label">{{ stat.label }}</span>
+  </div>
+
+</div>
+
+  <!-- ═══ BARRA DE ACCIONES ═══ -->
+  <div class="top-bar">
+    <ion-searchbar
+      placeholder="Buscar por nombre, cliente..."
+      [(ngModel)]="searchText"
+      debounce="500"
+      animated="true">
+    </ion-searchbar>
+
+    <ion-select [(ngModel)]="filterStatus" (ionChange)="onStatusChange()">
+      <ion-select-option value="Todos">Todos</ion-select-option>
+      <ion-select-option *ngFor="let s of statusOptions" [value]="s">{{ s }}</ion-select-option>
+    </ion-select>
+
+    <ion-button fill="outline" (click)="toggleAdvancedSearch()">
+      <ion-icon slot="start" name="filter-outline"></ion-icon>
+      Filtros
+    </ion-button>
+
+    <ion-button color="primary" (click)="abrirModalNuevoProyecto()">
+      <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+      Nuevo Proyecto
+    </ion-button>
+
+    <ion-button fill="outline" (click)="exportarDatos()">
+      <ion-icon slot="start" name="download-outline"></ion-icon>
+      Exportar
+    </ion-button>
+
+    <ion-button fill="outline">
+      <ion-icon slot="start" name="print-outline"></ion-icon>
+      Imprimir
+    </ion-button>
+  </div>
+
+  <!-- ═══ BÚSQUEDA AVANZADA ═══ -->
+  <div class="advanced-search" *ngIf="showAdvancedSearch">
+    <div class="advanced-header">
+      <h3>
+        <ion-icon name="options-outline"></ion-icon>
+        Filtros Avanzados
+      </h3>
+      <ion-button fill="clear" size="small" (click)="toggleAdvancedSearch()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </div>
+
+    <div class="filters-grid">
+      <div class="filter-item">
+        <label>Nombre del Proyecto</label>
+        <ion-input type="text" placeholder="Ej: Sistema Web" [(ngModel)]="advancedFilters.nombre" class="filter-input"></ion-input>
+      </div>
+      <div class="filter-item">
+        <label>Cliente</label>
+        <ion-input type="text" placeholder="Ej: Empresa ABC" [(ngModel)]="advancedFilters.cliente" class="filter-input"></ion-input>
+      </div>
+      <div class="filter-item">
+        <label>Estatus</label>
+        <ion-select [(ngModel)]="advancedFilters.status" placeholder="Seleccionar" class="filter-select">
+          <ion-select-option value="">Todos</ion-select-option>
+          <ion-select-option *ngFor="let s of statusOptions" [value]="s">{{ s }}</ion-select-option>
+        </ion-select>
+      </div>
+      <div class="filter-item">
+        <label>Fecha Inicio (Desde)</label>
+        <ion-input type="date" [(ngModel)]="advancedFilters.fechaInicio" class="filter-input"></ion-input>
+      </div>
+      <div class="filter-item">
+        <label>Fecha Fin (Hasta)</label>
+        <ion-input type="date" [(ngModel)]="advancedFilters.fechaFin" class="filter-input"></ion-input>
+      </div>
+    </div>
+
+    <div class="filter-actions">
+      <ion-button expand="block" (click)="aplicarFiltrosAvanzados()">
+        <ion-icon slot="start" name="search-outline"></ion-icon>
+        Buscar
+      </ion-button>
+      <ion-button expand="block" fill="outline" color="medium" (click)="limpiarFiltrosAvanzados()">
+        <ion-icon slot="start" name="refresh-outline"></ion-icon>
+        Limpiar Filtros
+      </ion-button>
+    </div>
+  </div>
+
+  <!-- Contador -->
+  <div class="results-info">
+    <p *ngIf="!loading">
+      Mostrando <strong>{{ proyectosFiltrados.length }}</strong> de <strong>{{ todosLosProyectos.length }}</strong> proyectos
+      <span *ngIf="advancedSearchActive" class="advanced-badge">
+        <ion-icon name="funnel-outline"></ion-icon>
+        Búsqueda avanzada activa
+      </span>
+    </p>
+  </div>
+
+  <!-- ═══ TABLA ═══ -->
+  <div class="table">
+    <div class="table-row header">
+      <div class="col-sortable" (click)="ordenarPor('id')">
+        ID <ion-icon [name]="getIconoOrden('id')"></ion-icon>
+      </div>
+      <div class="col-sortable" (click)="ordenarPor('nombre')">
+        Proyecto <ion-icon [name]="getIconoOrden('nombre')"></ion-icon>
+      </div>
+      <div class="col-sortable" (click)="ordenarPor('cliente')">
+        Cliente <ion-icon [name]="getIconoOrden('cliente')"></ion-icon>
+      </div>
+      <div class="col-sortable" (click)="ordenarPor('presupuesto')">
+        Valor <ion-icon [name]="getIconoOrden('presupuesto')"></ion-icon>
+      </div>
+      <div class="col-sortable" (click)="ordenarPor('fechaInicio')">
+        Fecha <ion-icon [name]="getIconoOrden('fechaInicio')"></ion-icon>
+      </div>
+      <div class="col-sortable" (click)="ordenarPor('status')">
+        Estatus <ion-icon [name]="getIconoOrden('status')"></ion-icon>
+      </div>
+      <div>Acción</div>
+    </div>
+
+    <!-- Filas de datos -->
+    <div class="table-row" *ngFor="let proyecto of proyectosFiltrados">
+      <div>{{ proyecto.id }}</div>
+      <div>{{ proyecto.nombre }}</div>
+      <div>{{ proyecto.cliente }}</div>
+      <div>{{ formatearPresupuesto(proyecto.presupuesto) }}</div>
+      <div>{{ formatearFecha(proyecto.fechaInicio) }}</div>
+      <div>
+        <ion-badge [color]="getEstadoColor(proyecto.status)">
+          {{ proyecto.status }}
+        </ion-badge>
+      </div>
+      <div class="acciones-col">
+        <ion-button fill="clear" size="small" (click)="verDetalleProyecto(proyecto)">
+          <ion-icon name="eye-outline"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" size="small" color="primary" (click)="editarProyecto(proyecto, $event)">
+          <ion-icon name="create-outline"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" size="small" color="danger" (click)="eliminarProyecto(proyecto, $event)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+
+    <!-- Sin resultados -->
+    <div class="table-row" *ngIf="proyectosFiltrados.length === 0 && !loading">
+      <div style="text-align: center; padding: 40px; grid-column: 1 / -1;">
+        <ion-icon name="briefcase-outline" style="font-size: 48px; color: var(--ion-color-medium);"></ion-icon>
+        <h3>No se encontraron proyectos</h3>
+        <p>Intenta con otros términos de búsqueda</p>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div class="table-row" *ngIf="loading">
+      <div style="text-align: center; padding: 40px; grid-column: 1 / -1;">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Cargando proyectos...</p>
+      </div>
+    </div>
+
+  </div>
+
+</ion-content>

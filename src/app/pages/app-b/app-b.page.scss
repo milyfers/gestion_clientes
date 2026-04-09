@@ -1,0 +1,120 @@
+.app-b-content {
+  --background: #f0f4ff;
+}
+
+.loading-container {
+  text-align: center;
+  padding: 80px 20px;
+  ion-spinner { margin-bottom: 16px; }
+  p { color: var(--ion-color-medium); }
+}
+
+.sso-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.app-b-header {
+  text-align: center;
+  margin-bottom: 24px;
+
+  .app-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+  }
+
+  .app-b-subtitle {
+    color: var(--ion-color-medium);
+    font-size: 14px;
+  }
+}
+
+.sso-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #43e97b22, #38f9d722);
+  border: 1px solid #43e97b;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+
+  ion-icon {
+    font-size: 32px;
+    color: var(--ion-color-success);
+    flex-shrink: 0;
+  }
+
+  strong { display: block; margin-bottom: 4px; }
+  p { margin: 0; font-size: 13px; color: var(--ion-color-medium); }
+}
+
+.usuario-card {
+  border-radius: 12px;
+  margin-bottom: 20px;
+
+  .usuario-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .usuario-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--ion-color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      ion-icon {
+        font-size: 24px;
+        color: white;
+      }
+    }
+
+    h3 { margin: 0 0 6px 0; font-weight: 600; }
+  }
+}
+
+.app-b-content-section {
+  h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .reporte-card {
+    border-radius: 12px;
+    margin-bottom: 12px;
+
+    h3 { margin: 0 0 6px 0; font-size: 16px; }
+    p  { margin: 0; color: var(--ion-color-medium); font-size: 14px; }
+  }
+}
+
+.sso-error {
+  text-align: center;
+  padding: 80px 20px;
+
+  ion-icon {
+    font-size: 80px;
+    color: var(--ion-color-danger);
+    margin-bottom: 16px;
+  }
+
+  h2 { margin-bottom: 8px; }
+  p  { color: var(--ion-color-medium); margin-bottom: 24px; }
+}

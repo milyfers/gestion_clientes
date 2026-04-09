@@ -1,0 +1,325 @@
+<ion-content class="ion-padding">
+
+  <!-- Breadcrumbs -->
+  <nav class="breadcrumbs">
+    <a [routerLink]="['/dashboard']" class="breadcrumb-item">
+      <ion-icon name="home-outline"></ion-icon>
+      <span>Inicio</span>
+    </a>
+    <ion-icon name="chevron-forward-outline" class="breadcrumb-separator"></ion-icon>
+    <span class="breadcrumb-item active">Compras</span>
+  </nav>
+
+  <!-- Título -->
+  <h1>Compras</h1>
+
+  <!-- ── KPI Cards ──────────────────────────────────────────── -->
+  <div class="kpi-row">
+    <div class="kpi-card kpi-warning">
+      <div class="kpi-icon"><ion-icon name="time-outline"></ion-icon></div>
+      <div class="kpi-body">
+        <div class="kpi-num">{{ countPorStatus().pendiente }}</div>
+        <div class="kpi-lbl">Pendientes</div>
+      </div>
+    </div>
+    <div class="kpi-card kpi-primary">
+      <div class="kpi-icon"><ion-icon name="checkmark-circle-outline"></ion-icon></div>
+      <div class="kpi-body">
+        <div class="kpi-num">{{ countPorStatus().aprobada }}</div>
+        <div class="kpi-lbl">Aprobadas</div>
+      </div>
+    </div>
+    <div class="kpi-card kpi-success">
+      <div class="kpi-icon"><ion-icon name="cart-outline"></ion-icon></div>
+      <div class="kpi-body">
+        <div class="kpi-num">{{ countPorStatus().recibida }}</div>
+        <div class="kpi-lbl">Recibidas</div>
+      </div>
+    </div>
+    <div class="kpi-card kpi-total">
+      <div class="kpi-icon"><ion-icon name="receipt-outline"></ion-icon></div>
+      <div class="kpi-body">
+        <div class="kpi-num">{{ totalCompras() | currency:'MXN':'symbol':'1.0-0' }}</div>
+        <div class="kpi-lbl">Total (filtrado)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Barra superior ─────────────────────────────────────── -->
+  <div class="top-bar">
+    <ion-searchbar
+      [value]="busqueda()"
+      (ionInput)="onBusqueda($event)"
+      placeholder="Buscar proveedor, folio…"
+      animated>
+    </ion-searchbar>
+
+    <ion-select
+      [value]="filtroStatus()"
+      (ionChange)="filtroStatus.set($event.detail.value)"
+      placeholder="Estado"
+      interface="popover">
+      <ion-select-option value="">Todos los estados</ion-select-option>
+      <ion-select-option *ngFor="let s of statusOpciones" [value]="s.valor">
+        {{ s.etiqueta }}
+      </ion-select-option>
+    </ion-select>
+
+    <ion-select
+      [value]="filtroCategoria()"
+      (ionChange)="filtroCategoria.set($event.detail.value)"
+      placeholder="Categoría"
+      interface="popover">
+      <ion-select-option value="">Todas</ion-select-option>
+      <ion-select-option *ngFor="let c of categoriaOpciones" [value]="c.valor">
+        {{ c.etiqueta }}
+      </ion-select-option>
+    </ion-select>
+
+    <ion-button fill="outline" color="medium" (click)="limpiarFiltros()">
+      <ion-icon slot="start" name="close-circle-outline"></ion-icon>
+      Limpiar
+    </ion-button>
+
+    <ion-button color="primary" (click)="abrirNueva()">
+      <ion-icon slot="start" name="add-outline"></ion-icon>
+      Nueva compra
+    </ion-button>
+  </div>
+
+  <!-- Contador -->
+  <div class="results-info">
+    <strong>{{ comprasFiltradas().length }}</strong> compras encontradas
+  </div>
+
+  <!-- ── Tabla ──────────────────────────────────────────────── -->
+  <div class="table" *ngIf="!cargando(); else spinner">
+
+    <!-- Encabezado -->
+    <div class="table-row header">
+      <div>Folio</div>
+      <div>Proveedor</div>
+      <div>Categoría</div>
+      <div>Proyecto</div>
+      <div>Fecha</div>
+      <div>Total</div>
+      <div>Estado</div>
+      <div>Acciones</div>
+    </div>
+
+    <!-- Filas -->
+    <div
+      class="table-row"
+      *ngFor="let compra of comprasFiltradas(); trackBy: trackById">
+
+      <div class="folio-cell">{{ compra.folio }}</div>
+
+      <div class="proveedor-cell">
+        <span class="proveedor-nombre">{{ compra.proveedor }}</span>
+        <span class="factura-chip" *ngIf="compra.factura">{{ compra.factura }}</span>
+      </div>
+
+      <div>
+        <ion-chip class="cat-chip" outline>
+          {{ etiquetaCategoria(compra.categoria) }}
+        </ion-chip>
+      </div>
+
+      <div class="proyecto-cell">
+        <span *ngIf="compra.proyecto; else sinProyecto">{{ compra.proyecto }}</span>
+        <ng-template #sinProyecto><span class="text-muted">—</span></ng-template>
+      </div>
+
+      <div class="fecha-cell">
+        <span>{{ compra.fechaCompra }}</span>
+        <span class="fecha-entrega" *ngIf="compra.fechaEntrega">→ {{ compra.fechaEntrega }}</span>
+      </div>
+
+      <div class="total-cell">
+        {{ compra.total | currency:'MXN':'symbol':'1.2-2' }}
+      </div>
+
+      <div>
+        <ion-badge [color]="colorStatus(compra.status)">
+          {{ etiquetaStatus(compra.status) }}
+        </ion-badge>
+      </div>
+
+      <div class="actions-cell">
+        <ion-button fill="clear" size="small" color="primary"
+          (click)="abrirEdicion(compra)" title="Editar">
+          <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" size="small" color="danger"
+          (click)="confirmarEliminar(compra)" title="Eliminar">
+          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+        </ion-button>
+      </div>
+
+    </div>
+
+    <!-- Empty state -->
+    <div class="empty-row" *ngIf="comprasFiltradas().length === 0">
+      <ion-icon name="cart-outline"></ion-icon>
+      <p>Sin compras registradas</p>
+    </div>
+
+  </div>
+
+  <ng-template #spinner>
+    <div class="spinner-center">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+    </div>
+  </ng-template>
+
+</ion-content>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!--  MODAL – Nueva / Editar Compra                               -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<ion-modal [isOpen]="modalAbierto()" (didDismiss)="cerrarModal()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-title>{{ modoEdicion() ? 'Editar Compra' : 'Nueva Compra' }}</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="cerrarModal()">
+            <ion-icon slot="icon-only" name="close-circle-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="modal-content">
+      <form [formGroup]="compraForm">
+
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Datos generales</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+
+            <ion-item>
+              <ion-label position="stacked">Proveedor *</ion-label>
+              <ion-input formControlName="proveedor" placeholder="Nombre del proveedor"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Categoría *</ion-label>
+              <ion-select formControlName="categoria" interface="popover">
+                <ion-select-option *ngFor="let c of categoriaOpciones" [value]="c.valor">
+                  {{ c.etiqueta }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Proyecto asociado</ion-label>
+              <ion-input formControlName="proyecto" placeholder="Nombre del proyecto (opcional)"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Estado *</ion-label>
+              <ion-select formControlName="status" interface="popover">
+                <ion-select-option *ngFor="let s of statusOpciones" [value]="s.valor">
+                  {{ s.etiqueta }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Fecha de compra *</ion-label>
+              <ion-input formControlName="fechaCompra" type="date"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Fecha estimada de entrega</ion-label>
+              <ion-input formControlName="fechaEntrega" type="date"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">No. Factura</ion-label>
+              <ion-input formControlName="factura" placeholder="FAC-0001"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Notas</ion-label>
+              <ion-textarea formControlName="notas" rows="2" placeholder="Observaciones…"></ion-textarea>
+            </ion-item>
+
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>
+              Partidas
+              <ion-button fill="clear" size="small" (click)="agregarItem()" style="float:right">
+                <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+                Agregar
+              </ion-button>
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+
+            <div formArrayName="items">
+              <div
+                *ngFor="let item of itemsArray.controls; let i = index"
+                [formGroupName]="i"
+                class="item-row">
+
+                <ion-item>
+                  <ion-label position="stacked">Descripción *</ion-label>
+                  <ion-input formControlName="descripcion" placeholder="Descripción del artículo"></ion-input>
+                </ion-item>
+
+                <ion-grid class="item-grid">
+                  <ion-row>
+                    <ion-col size="4">
+                      <ion-item>
+                        <ion-label position="stacked">Cant.</ion-label>
+                        <ion-input formControlName="cantidad" type="number" min="1"></ion-input>
+                      </ion-item>
+                    </ion-col>
+                    <ion-col size="4">
+                      <ion-item>
+                        <ion-label position="stacked">Precio u.</ion-label>
+                        <ion-input formControlName="precioUnitario" type="number" min="0"></ion-input>
+                      </ion-item>
+                    </ion-col>
+                    <ion-col size="4">
+                      <ion-item>
+                        <ion-label position="stacked">Subtotal</ion-label>
+                        <ion-input formControlName="subtotal" [readonly]="true"></ion-input>
+                      </ion-item>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+
+                <ion-button
+                  fill="clear" color="danger" size="small"
+                  (click)="eliminarItem(i)"
+                  *ngIf="itemsArray.length > 1">
+                  <ion-icon slot="start" name="remove-circle-outline"></ion-icon>
+                  Eliminar partida
+                </ion-button>
+
+                <hr *ngIf="i < itemsArray.length - 1" class="divider">
+              </div>
+            </div>
+
+            <div class="total-row">
+              <strong>Total:</strong>
+              <span class="total-amount">{{ totalForm() | currency:'MXN':'symbol':'1.2-2' }}</span>
+            </div>
+
+          </ion-card-content>
+        </ion-card>
+
+        <div class="btn-row">
+          <ion-button expand="block" (click)="guardar()" [disabled]="compraForm.invalid">
+            <ion-icon slot="start" name="{{ modoEdicion() ? 'create-outline' : 'add-outline' }}"></ion-icon>
+            {{ modoEdicion() ? 'Actualizar' : 'Registrar' }} Compra
+          </ion-button>
+          <ion-button expand="block" fill="outline" color="medium" (click)="cerrarModal()">
+            Cancelar
+          </ion-button>
+        </div>
+
+      </form>
+    </ion-content>
+  </ng-template>
+</ion-modal>

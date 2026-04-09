@@ -1,0 +1,213 @@
+.error-page {
+  --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+/* =========================
+   ILUSTRACIÓN
+========================= */
+.error-illustration {
+  position: relative;
+  margin-bottom: 40px;
+  animation: float 3s ease-in-out infinite;
+}
+
+.error-code {
+  font-size: 140px;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.2);
+  line-height: 1;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 80px;
+  color: white;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+/* =========================
+   CONTENIDO
+========================= */
+.error-content {
+  max-width: 500px;
+  margin-bottom: 40px;
+  
+  h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 16px 0;
+  }
+  
+  .error-message {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0 0 12px 0;
+    line-height: 1.6;
+  }
+  
+  .error-hint {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+  }
+}
+
+/* =========================
+   ACCIONES
+========================= */
+.error-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 50px;
+  
+  ion-button {
+    --background: white;
+    --color: #667eea;
+    height: 48px;
+    font-weight: 600;
+    text-transform: none;
+    
+    &[fill="outline"] {
+      --background: transparent;
+      --color: white;
+      --border-color: white;
+      
+      &:hover {
+        --background: rgba(255, 255, 255, 0.1);
+      }
+    }
+    
+    ion-icon {
+      font-size: 20px;
+    }
+  }
+}
+
+/* =========================
+   ENLACES ÚTILES
+========================= */
+.helpful-links {
+  max-width: 500px;
+  
+  .links-title {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0 0 16px 0;
+    font-weight: 600;
+  }
+}
+
+.links-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.link-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: white;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  
+  ion-icon {
+    font-size: 28px;
+  }
+  
+  span {
+    font-size: 12px;
+    font-weight: 500;
+  }
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-4px);
+  }
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+  .error-code {
+    font-size: 100px;
+  }
+  
+  .search-icon {
+    font-size: 60px;
+  }
+  
+  .error-content {
+    h1 {
+      font-size: 26px;
+    }
+  }
+  
+  .links-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .error-code {
+    font-size: 80px;
+  }
+  
+  .search-icon {
+    font-size: 50px;
+  }
+  
+  .error-content {
+    h1 {
+      font-size: 22px;
+    }
+    
+    .error-message {
+      font-size: 15px;
+    }
+  }
+}

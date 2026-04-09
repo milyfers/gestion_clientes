@@ -1,0 +1,116 @@
+<ion-content class="ion-padding">  
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <span>Herramientas</span>
+    <span class="separator">›</span>
+    <span class="active">Gestión de Usuarios</span>
+  </div>
+
+  <!-- Barra de acciones -->
+  <div class="top-bar">
+    <ion-searchbar
+      placeholder="Buscar por nombre, email o rol..."
+      [(ngModel)]="terminoBusqueda"
+      (ionInput)="buscarUsuarios($event)"
+      class="custom-searchbar"
+    ></ion-searchbar>
+
+    <ion-button color="primary" (click)="nuevoUsuario()">
+      <ion-icon slot="start" name="add-outline"></ion-icon>
+      Nuevo Usuario
+    </ion-button>
+  </div>
+
+  <!-- Estadísticas rápidas -->
+  <div class="stats-container">
+    <div class="stat-card">
+      <ion-icon name="person-outline" color="primary"></ion-icon>
+      <div class="stat-info">
+        <p class="stat-number">{{ usuarios.length }}</p>
+        <p class="stat-label">Total Usuarios</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <ion-icon name="shield-checkmark-outline" color="success"></ion-icon>
+      <div class="stat-info">
+        <p class="stat-number">{{ usuariosActivos }}</p>
+        <p class="stat-label">Activos</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <ion-icon name="lock-closed-outline" color="danger"></ion-icon>
+      <div class="stat-info">
+        <p class="stat-number">{{ administradores }}</p>
+        <p class="stat-label">Administradores</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista de usuarios -->
+  <ion-card *ngIf="usuariosFiltrados.length > 0" class="usuarios-card">
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let usuario of usuariosFiltrados" lines="full">
+          
+          <!-- Avatar -->
+          <ion-avatar slot="start">
+            <div class="avatar-placeholder">
+              {{ usuario.nombre.charAt(0).toUpperCase() }}
+            </div>
+          </ion-avatar>
+
+          <!-- Información del usuario -->
+          <ion-label>
+            <h2>{{ usuario.nombre }}</h2>
+            <p>{{ usuario.email }}</p>
+            <div class="badges-container">
+              <ion-badge [color]="getRolColor(usuario.roleNombre)">{{ usuario.roleNombre }}</ion-badge>
+              <ion-badge [color]="getStatusColor(usuario.status)">{{ usuario.status }}</ion-badge>
+            </div>
+            <p class="fecha-texto">
+              <small>Registrado: {{ usuario.fechaRegistro }}</small>
+              <small *ngIf="usuario.ultimoAcceso"> | Último acceso: {{ usuario.ultimoAcceso }}</small>
+            </p>
+          </ion-label>
+
+          <!-- Acciones -->
+          <div slot="end" class="acciones-usuario">
+            <ion-button fill="clear" (click)="editarUsuario(usuario)" color="primary">
+              <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+            </ion-button>
+
+            <!-- NUEVO — bloquear/desbloquear -->
+            <ion-button 
+              fill="clear" 
+              (click)="toggleBloqueo(usuario)"
+              [color]="usuario.status === 'Activo' ? 'warning' : 'success'"
+              [disabled]="usuario.es_sistema"
+            >
+              <ion-icon slot="icon-only" [name]="usuario.status === 'Activo' ? 'lock-closed-outline' : 'lock-open-outline'"></ion-icon>
+            </ion-button>
+
+            <ion-button 
+              fill="clear" 
+              (click)="eliminarUsuario(usuario)" 
+              color="danger"
+              [disabled]="usuario.es_sistema"
+            >
+              <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+            </ion-button>
+          </div>
+
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Sin resultados -->
+  <div *ngIf="usuariosFiltrados.length === 0" class="sin-resultados">
+    <ion-icon name="search-outline" color="medium"></ion-icon>
+    <p>No se encontraron usuarios</p>
+    <ion-button fill="outline" (click)="terminoBusqueda = ''; cargarUsuarios()">
+      Limpiar búsqueda
+    </ion-button>
+  </div>
+
+</ion-content>

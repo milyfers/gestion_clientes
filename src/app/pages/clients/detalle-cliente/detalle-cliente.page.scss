@@ -1,0 +1,344 @@
+ion-content {
+  --background: #f6f7fb;
+  --padding-top: 100px;
+  --padding-start: 24px;
+  --padding-end: 24px;
+  --padding-bottom: 24px;
+}
+
+// Loading
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  color: #999;
+
+  ion-spinner {
+    margin-bottom: 16px;
+  }
+
+  p {
+    font-size: 14px;
+  }
+}
+
+// Container principal
+.detalle-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+// Cabecera del cliente
+.cabecera-cliente {
+  background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  .avatar-container {
+    .avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background-color: #4a4a4a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+      ion-icon {
+        font-size: 48px;
+        color: #fff;
+      }
+    }
+  }
+
+  .info-principal {
+    flex: 1;
+
+    h1 {
+      font-size: 28px;
+      font-weight: bold;
+      color: #4a4a4a;
+      margin: 0 0 8px 0;
+    }
+
+    .cliente-id {
+      font-size: 13px;
+      color: #666;
+      font-family: monospace;
+      margin: 0 0 12px 0;
+    }
+
+    .badge-estado {
+      font-size: 12px;
+      padding: 6px 12px;
+      font-weight: 600;
+    }
+  }
+}
+
+// Botones de acción header
+.botones-accion-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+
+  ion-button {
+    --border-radius: 8px;
+    height: 48px;
+    font-weight: 600;
+    text-transform: none;
+    margin: 0;
+  }
+}
+
+// Secciones
+.seccion-card {
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+
+  .seccion-header {
+    cursor: pointer;
+    user-select: none;
+    background-color: #f5f5f5;
+    padding: 16px;
+    border-bottom: 1px solid #e0e0e0;
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      ion-card-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #4a4a4a;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0;
+
+        .contador-badge {
+          font-size: 11px;
+          padding: 4px 8px;
+        }
+      }
+
+      ion-icon {
+        font-size: 20px;
+        color: #666;
+      }
+    }
+  }
+
+  .seccion-content {
+    padding: 20px;
+  }
+}
+
+// Campos de información
+.campo-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 16px 0;
+  border-bottom: 1px solid #f0f0f0;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .campo-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+    min-width: 180px;
+
+    ion-icon {
+      font-size: 18px;
+      color: #999;
+    }
+  }
+
+  .campo-valor {
+    flex: 1;
+    text-align: right;
+    font-size: 14px;
+    color: #4a4a4a;
+    word-break: break-word;
+
+    a {
+      color: #3880ff;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .codigo-fiscal {
+      font-size: 12px;
+      color: #999;
+      margin-left: 4px;
+    }
+  }
+}
+
+// Proyectos
+.proyectos-content {
+  .sin-proyectos {
+    text-align: center;
+    padding: 32px 16px;
+    color: #999;
+
+    ion-icon {
+      font-size: 48px;
+      color: #ccc;
+      margin-bottom: 12px;
+    }
+
+    p {
+      font-size: 14px;
+      margin: 0;
+    }
+  }
+
+  .info-proyectos {
+    padding: 16px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    text-align: center;
+
+    p {
+      margin: 0;
+      font-size: 14px;
+      color: #666;
+
+      strong {
+        color: #4a4a4a;
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+// Metadata
+.metadata-card {
+  background-color: #f9f9f9;
+
+  .metadata-info {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+
+    .metadata-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 200px;
+
+      ion-icon {
+        font-size: 24px;
+        color: #999;
+      }
+
+      .metadata-label {
+        font-size: 12px;
+        color: #666;
+        margin: 0 0 4px 0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .metadata-valor {
+        font-size: 14px;
+        color: #4a4a4a;
+        font-weight: 500;
+        margin: 0;
+      }
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .cabecera-cliente {
+    flex-direction: column;
+    text-align: center;
+    padding: 24px 16px;
+
+    .avatar-container .avatar {
+      width: 80px;
+      height: 80px;
+
+      ion-icon {
+        font-size: 36px;
+      }
+    }
+
+    .info-principal h1 {
+      font-size: 22px;
+    }
+  }
+
+  .botones-accion-header {
+    grid-template-columns: 1fr;
+  }
+
+  .campo-info {
+    flex-direction: column;
+    gap: 8px;
+
+    .campo-label {
+      min-width: auto;
+    }
+
+    .campo-valor {
+      text-align: left;
+    }
+  }
+
+  .metadata-info {
+    flex-direction: column;
+  }
+}
+
+// Estilos para impresión
+@media print {
+  ion-header,
+  .botones-accion-header,
+  .seccion-header ion-icon {
+    display: none !important;
+  }
+
+  .seccion-content {
+    display: block !important;
+  }
+
+  .cabecera-cliente {
+    background: white !important;
+    box-shadow: none !important;
+    border: 1px solid #ddd;
+  }
+
+  .seccion-card {
+    page-break-inside: avoid;
+    box-shadow: none !important;
+    border: 1px solid #ddd;
+  }
+}

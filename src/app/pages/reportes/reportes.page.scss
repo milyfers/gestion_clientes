@@ -1,0 +1,367 @@
+/* ===== Fondo general ===== */
+ion-content {
+  --background: var(--ion-background-color);
+  --padding-top: 100px;
+  --padding-start: 24px;
+  --padding-end: 24px;
+  --padding-bottom: 24px;
+}
+
+/* ===== Breadcrumbs ===== */
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: var(--ion-color-medium);
+
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+    color: var(--ion-color-medium);
+    transition: color 0.2s;
+
+    &:hover:not(.active) { color: var(--ion-color-primary); }
+    &.active { color: var(--ion-text-color); font-weight: 600; }
+    ion-icon { font-size: 16px; }
+  }
+
+  .breadcrumb-separator { font-size: 14px; }
+}
+
+/* ===== Title bar ===== */
+.title-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--ion-text-color);
+}
+
+/* ===== Periodo tabs ===== */
+.periodo-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--ion-card-background);
+  border-radius: 8px;
+  padding: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.periodo-btn {
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--ion-color-medium);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &.active {
+    background: var(--ion-color-primary);
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(var(--ion-color-primary-rgb), 0.35);
+  }
+
+  &:hover:not(.active) { background: var(--ion-color-light); }
+}
+
+/* ===== KPI Row ===== */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+
+  @media (max-width: 992px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 480px)  { grid-template-columns: 1fr 1fr; }
+}
+
+.kpi-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: 12px;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+
+  .kpi-icon ion-icon { font-size: 2rem; opacity: 0.85; }
+
+  .kpi-num {
+    font-size: 1.6rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .kpi-lbl {
+    font-size: 0.72rem;
+    opacity: 0.85;
+    margin-top: 2px;
+    font-weight: 500;
+  }
+
+  .kpi-trend {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.7rem;
+    margin-top: 5px;
+    opacity: 0.9;
+
+    ion-icon { font-size: 0.85rem; }
+    .up   { color: #a5d6a7; font-weight: 700; }
+    .down { color: #ef9a9a; font-weight: 700; }
+  }
+}
+
+.kpi-primary   { background: var(--ion-color-primary); }
+.kpi-success   { background: var(--ion-color-success); }
+.kpi-warning   { background: var(--ion-color-warning); color: #333;
+  .kpi-lbl, .kpi-trend { color: #555; } }
+.kpi-tertiary  { background: var(--ion-color-tertiary); }
+
+/* ===== Layout dos columnas ===== */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+
+  @media (max-width: 768px) { grid-template-columns: 1fr; }
+}
+
+/* ===== Tabla / Card base ===== */
+.table {
+  background: var(--ion-card-background);
+  border-radius: 10px;
+  padding: 0 0 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 18px 12px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ion-text-color);
+  border-bottom: 1px solid var(--ion-color-light);
+
+  ion-icon { font-size: 18px; color: var(--ion-color-primary); }
+}
+
+.section-subheader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 16px 0 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ion-color-medium-shade);
+
+  ion-icon { font-size: 15px; }
+}
+
+/* ===== Tabla de proyectos ===== */
+.table-row {
+  display: grid;
+  padding: 10px 18px;
+  align-items: center;
+  font-size: 14px;
+  color: var(--ion-text-color);
+
+  &:not(.header) { border-top: 1px solid var(--ion-color-light); }
+}
+
+/* Proyectos: 5 columnas */
+.table .table-row { grid-template-columns: 1.8fr 1.4fr 1fr 1.4fr 110px; }
+
+/* Top clientes: 3 columnas */
+.top-clientes .table-row { grid-template-columns: 36px 1fr 80px; }
+
+/* Encabezado */
+.table-row.header {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ion-color-medium);
+  text-transform: uppercase;
+  background: var(--ion-color-step-100);
+  border-top: none;
+}
+
+.proyecto-nombre { font-weight: 600; font-size: 13px; }
+.cliente-nombre  { font-size: 13px; color: var(--ion-color-medium-shade); }
+.presupuesto-val { font-weight: 700; color: var(--ion-color-primary); font-size: 13px; }
+
+.avance-col {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  ion-progress-bar { flex: 1; }
+
+  .avance-pct {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ion-color-medium);
+    min-width: 32px;
+    text-align: right;
+  }
+}
+
+ion-badge {
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+/* ===== Distribución (barras) ===== */
+.dist-body {
+  padding: 14px 18px;
+}
+
+.dist-row {
+  margin-bottom: 14px;
+  &:last-child { margin-bottom: 0; }
+}
+
+.dist-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.dist-label { font-size: 13px; font-weight: 500; }
+
+.dist-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dist-pct {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ion-color-medium-shade);
+
+  &.muted { font-weight: 400; color: var(--ion-color-medium); }
+}
+
+/* ===== Presupuesto ===== */
+.presup-nums {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.presup-item {
+  background: var(--ion-color-light);
+  border-radius: 8px;
+  padding: 10px 12px;
+
+  .presup-lbl {
+    font-size: 11px;
+    color: var(--ion-color-medium);
+    margin-bottom: 4px;
+  }
+
+  .presup-val {
+    font-size: 1rem;
+    font-weight: 700;
+
+    &.primary { color: var(--ion-color-primary); }
+    &.success  { color: var(--ion-color-success); }
+  }
+}
+
+.bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--ion-color-medium);
+  margin-bottom: 4px;
+}
+
+/* ===== Top Clientes ===== */
+.rank-badge {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--ion-color-primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== Actividad reciente ===== */
+.actividad-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 18px;
+  border-top: 1px solid var(--ion-color-light);
+
+  &:first-of-type { border-top: none; }
+
+  ion-icon { font-size: 20px; margin-top: 1px; flex-shrink: 0; }
+}
+
+.actividad-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  .actividad-desc {
+    font-size: 13px;
+    color: var(--ion-text-color);
+    font-weight: 500;
+  }
+
+  .actividad-fecha {
+    font-size: 12px;
+    color: var(--ion-color-medium);
+  }
+}
+
+/* ===== Spinner ===== */
+.spinner-center {
+  display: flex;
+  justify-content: center;
+  padding: 64px;
+}
+
+/* ===== Responsive proyectos ===== */
+@media (max-width: 992px) {
+  .table .table-row { grid-template-columns: 1.6fr 1.2fr 1fr 100px; }
+  .table .table-row > div:nth-child(2),
+  .table .table-row.header > div:nth-child(2) { display: none; }
+}
+
+@media (max-width: 600px) {
+  .table .table-row { grid-template-columns: 1fr 1fr 90px; }
+  .table .table-row > div:nth-child(3),
+  .table .table-row.header > div:nth-child(3) { display: none; }
+}

@@ -1,0 +1,137 @@
+<div class="metrics-panel scroll-reveal">
+  <div class="metrics-header">
+    <div class="metrics-title">
+      <ion-icon name="stats-chart-outline"></ion-icon>
+      <h3>Métricas de Rendimiento</h3>
+      <span class="metrics-live">● EN VIVO</span>
+    </div>
+    <button class="metrics-reset" (click)="resetMetricas()">
+      <ion-icon name="refresh-outline"></ion-icon>
+    </button>
+  </div>
+
+  <div class="metrics-grid">
+
+    <div class="metric-card">
+      <div class="metric-top">
+        <span class="metric-label">FPS</span>
+        <ion-icon name="speedometer-outline" class="metric-icon"></ion-icon>
+      </div>
+      <span class="metric-value"
+        [class.valor-bueno]="fps >= 55"
+        [class.valor-medio]="fps >= 30 && fps < 55"
+        [class.valor-malo]="fps < 30">
+        {{ fps }}
+      </span>
+      <div class="metric-bar">
+        <div class="metric-fill"
+          [class.fill-bueno]="fps >= 55"
+          [class.fill-medio]="fps >= 30 && fps < 55"
+          [class.fill-malo]="fps < 30"
+          [style.width.%]="(fps / 60) * 100">
+        </div>
+      </div>
+      <span class="metric-sub">meta: 60fps</span>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-top">
+        <span class="metric-label">Carga dashboard</span>
+        <ion-icon name="time-outline" class="metric-icon"></ion-icon>
+      </div>
+      <span class="metric-value"
+        [class.valor-bueno]="metricas.tiempoCarga < 300"
+        [class.valor-medio]="metricas.tiempoCarga >= 300 && metricas.tiempoCarga < 800"
+        [class.valor-malo]="metricas.tiempoCarga >= 800">
+        {{ metricas.tiempoCarga }}ms
+      </span>
+      <div class="metric-bar">
+        <div class="metric-fill"
+          [class.fill-bueno]="metricas.tiempoCarga < 300"
+          [class.fill-medio]="metricas.tiempoCarga >= 300 && metricas.tiempoCarga < 800"
+          [class.fill-malo]="metricas.tiempoCarga >= 800"
+          [style.width.%]="100 - (metricas.tiempoCarga / 2000) * 100">
+        </div>
+      </div>
+      <span class="metric-sub">Promise.allSettled</span>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-top">
+        <span class="metric-label">Caché hits</span>
+        <ion-icon name="flash-outline" class="metric-icon"></ion-icon>
+      </div>
+      <span class="metric-value valor-bueno">{{ metricas.cacheHits }}</span>
+      <div class="metric-bar">
+        <div class="metric-fill fill-bueno"
+          [style.width.%]="Math.min((metricas.cacheHits / 10) * 100, 100)">
+        </div>
+      </div>
+      <span class="metric-sub">peticiones evitadas</span>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-top">
+        <span class="metric-label">Debounces</span>
+        <ion-icon name="funnel-outline" class="metric-icon"></ion-icon>
+      </div>
+      <span class="metric-value valor-medio">{{ metricas.debounceCount }}</span>
+      <div class="metric-bar">
+        <div class="metric-fill fill-medio"
+          [style.width.%]="Math.min((metricas.debounceCount / 20) * 100, 100)">
+        </div>
+      </div>
+      <span class="metric-sub">llamadas filtradas</span>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-top">
+        <span class="metric-label">Throttle</span>
+        <ion-icon name="pulse-outline" class="metric-icon"></ion-icon>
+      </div>
+      <span class="metric-value valor-medio">{{ metricas.throttleCount }}</span>
+      <div class="metric-bar">
+        <div class="metric-fill fill-medio"
+          [style.width.%]="Math.min((metricas.throttleCount / 100) * 100, 100)">
+        </div>
+      </div>
+      <span class="metric-sub">eventos limitados</span>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-top">
+        <span class="metric-label">rAF frames</span>
+        <ion-icon name="film-outline" class="metric-icon"></ion-icon>
+      </div>
+      <span class="metric-value valor-bueno">{{ (rafCount / 60) | number:'1.0-0' }}s</span>
+      <div class="metric-bar">
+        <div class="metric-fill fill-bueno"
+          [style.width.%]="Math.min((rafCount / 500) * 100, 100)">
+        </div>
+      </div>
+      <span class="metric-sub">tiempo animado activo</span>
+    </div>
+
+  </div>
+
+  <div class="metrics-log">
+    <div class="log-header">
+      <ion-icon name="terminal-outline"></ion-icon>
+      <span>Log de eventos</span>
+      <span class="log-count">{{ logEventos.length }} eventos</span>
+    </div>
+    <div class="log-list">
+      <div class="log-item" *ngFor="let log of logEventos"
+           [class.log-success]="log.tipo === 'success'"
+           [class.log-info]="log.tipo === 'info'"
+           [class.log-warning]="log.tipo === 'warning'">
+        <span class="log-time">{{ log.tiempo }}</span>
+        <span class="log-msg">{{ log.mensaje }}</span>
+      </div>
+      <div class="log-empty" *ngIf="logEventos.length === 0">
+        <ion-icon name="information-circle-outline"></ion-icon>
+        Mueve el mouse o usa el buscador para ver eventos
+      </div>
+    </div>
+  </div>
+</div>

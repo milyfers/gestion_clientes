@@ -1,0 +1,105 @@
+h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.subtitulo {
+  color: var(--ion-color-medium);
+  margin-bottom: 24px;
+}
+
+.loading-container {
+  text-align: center;
+  padding: 40px;
+  ion-spinner { margin-bottom: 12px; }
+}
+
+.sesion-card {
+  border-radius: 12px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+
+  &.sesion-actual {
+    border-left: 4px solid var(--ion-color-success);
+  }
+
+  .sesion-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+
+    .sesion-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--ion-color-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      ion-icon {
+        font-size: 22px;
+        color: var(--ion-color-primary);
+      }
+    }
+
+    .sesion-info {
+      flex: 1;
+      h3 {
+        font-weight: 600;
+        margin: 0 0 4px 0;
+        font-size: 15px;
+      }
+    }
+  }
+
+  .sesion-detalles {
+    .detalle-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      font-size: 13px;
+      color: var(--ion-color-medium);
+
+      ion-icon { font-size: 16px; }
+    }
+  }
+}
+
+.sin-sesiones {
+  text-align: center;
+  padding: 60px 20px;
+  ion-icon {
+    font-size: 64px;
+    color: var(--ion-color-medium);
+    margin-bottom: 16px;
+  }
+  p { color: var(--ion-color-medium); }
+}
+
+.btn-cerrar-todas {
+  margin-top: 16px;
+}
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--ion-color-medium);
+    text-decoration: none;
+
+    &.active { color: var(--ion-color-primary); font-weight: 500; }
+  }
+
+  .breadcrumb-separator { color: var(--ion-color-medium-shade); }
+}

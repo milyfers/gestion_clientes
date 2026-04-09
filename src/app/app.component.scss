@@ -1,0 +1,458 @@
+/* =========================
+   RESET IONIC
+========================= */
+ion-app {
+  ion-header {
+    position: relative;
+    
+    &::after {
+      display: none;
+    }
+  }
+}
+
+/* =========================
+   HEADER
+========================= */
+.app-header {
+  background: #ffffff;
+  border-bottom: 1px solid #ededed;
+  box-shadow: none;
+  
+  ion-toolbar {
+    --background: transparent;
+    --min-height: 60px;
+    --padding-top: 0;
+    --padding-bottom: 0;
+  }
+}
+
+:root.ion-palette-dark .app-header {
+  background: #1a1a1a;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  padding: 0 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  gap: 24px;
+}
+
+/* =========================
+   IZQUIERDA
+========================= */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.logo {
+  font-size: 18px;
+  font-weight: 700;
+   color: var(--ion-text-color);
+  letter-spacing: -0.5px;
+  white-space: nowrap;
+}
+
+/* =========================
+   MENÚ DESKTOP
+========================= */
+.menu {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
+  font-size: 14px;
+}
+
+.menu-item {
+  position: relative;
+  padding: 8px 0;
+  cursor: pointer;
+  color: #666;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+  
+  &:hover {
+    color: #000;
+  }
+  
+  &.active {
+    color: #000;
+    font-weight: 600;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #000;
+      border-radius: 2px;
+    }
+  }
+}
+
+.menu-label {
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* =========================
+   SUBMENÚ DESKTOP
+========================= */
+.submenu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffffff;
+  border-radius: 12px;
+  min-width: 180px;
+  padding: 8px 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+  transform: translateX(-50%) translateY(-10px);
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.menu-item:hover .submenu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+.submenu-item {
+  display: block;
+  padding: 12px 20px;
+  font-size: 13px;
+  color: #444;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+  text-decoration: none;
+  
+  &:hover {
+    background: #f5f6fa;
+    color: #000;
+  }
+  
+  &:first-child {
+    border-radius: 12px 12px 0 0;
+  }
+  
+  &:last-child {
+    border-radius: 0 0 12px 12px;
+  }
+}
+
+/* =========================
+   DERECHA - MENÚ DE USUARIO
+========================= */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  
+  ion-avatar {
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    
+    &:hover {
+      transform: scale(1.05);
+    }
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}
+
+/* =========================
+   MENÚ DE USUARIO (DROPDOWN)
+========================= */
+.user-menu-wrapper {
+  position: relative;
+}
+
+.user-menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  background: #ffffff;
+  border-radius: 12px;
+  min-width: 240px;
+  padding: 8px 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+  z-index: 1001;
+  
+  &.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  
+  /* Flecha del menú */
+  &::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 12px;
+    width: 12px;
+    height: 12px;
+    background: #ffffff;
+    transform: rotate(45deg);
+    box-shadow: -2px -2px 4px rgba(0, 0, 0, 0.05);
+  }
+}
+
+.user-menu-header {
+  padding: 12px 16px;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  
+  strong {
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+  }
+  
+  span {
+    font-size: 12px;
+    color: #666;
+  }
+}
+
+.user-menu-divider {
+  height: 1px;
+  background: #ededed;
+  margin: 8px 0;
+}
+
+.user-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  font-size: 14px;
+  color: #333;
+  text-align: left;
+  
+  ion-icon {
+    font-size: 20px;
+    color: #666;
+  }
+  
+  &:hover {
+    background: #f5f6fa;
+  }
+  
+  &.logout {
+    color: #dc3545;
+    
+    ion-icon {
+      color: #dc3545;
+    }
+    
+    &:hover {
+      background: #fff5f5;
+    }
+  }
+}
+
+/* =========================
+   CONTENIDO PRINCIPAL
+========================= */
+
+
+/* =========================
+   MENÚ MÓVIL
+========================= */
+ion-menu {
+  --width: 280px;
+  
+  ion-toolbar {
+    --background: #f8f9fa;
+    --border-width: 0;
+    --min-height: 60px;
+  }
+  
+  .menu-logo {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000;
+  }
+}
+
+.menu-content {
+  --background: #ffffff;
+  
+  ion-list {
+    background: transparent;
+    padding: 12px 0;
+  }
+  
+  ion-item {
+    --background: transparent;
+    --padding-start: 20px;
+    --inner-padding-end: 20px;
+    font-size: 15px;
+    margin: 4px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    
+    &.active {
+      --background: #f0f0f0;
+      font-weight: 600;
+    }
+    
+    &:hover {
+      --background: #f8f9fa;
+    }
+  }
+  
+  ion-accordion {
+    margin: 4px 12px;
+    border-radius: 8px;
+    
+    ion-item[slot="header"] {
+      margin: 0;
+      border-radius: 8px;
+    }
+  }
+  
+  .submenu-label {
+    padding-left: 16px;
+    font-size: 14px;
+    color: #666;
+  }
+}
+
+/* =========================
+   OPCIONES DE USUARIO EN MÓVIL
+========================= */
+.mobile-user-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #ededed;
+  
+  ion-item {
+    --padding-start: 20px;
+    --inner-padding-end: 20px;
+    font-size: 15px;
+    margin: 4px 12px;
+    border-radius: 8px;
+    
+    &:hover {
+      --background: #f8f9fa;
+    }
+    
+    &.logout-item {
+      color: #dc3545;
+      
+      ion-icon {
+        color: #dc3545;
+      }
+      
+      &:hover {
+        --background: #fff5f5;
+      }
+    }
+  }
+  
+  ion-icon {
+    margin-right: 8px;
+  }
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+.mobile-only {
+  display: none;
+}
+
+.desktop-only {
+  display: flex;
+}
+
+ion-menu-button {
+  --color: #000;
+  --padding-start: 0;
+  --padding-end: 0;
+}
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none !important;
+  }
+
+  .mobile-only {
+    display: block;
+  }
+  
+  .header-container {
+    padding: 0 16px;
+  }
+  
+  .logo {
+    font-size: 16px;
+  }
+  
+  .menu {
+    display: none;
+  }
+  
+  .header-right {
+    ion-avatar {
+      width: 32px;
+      height: 32px;
+    }
+  }
+  
+  .user-menu-wrapper {
+    .user-menu {
+      right: -12px;
+      min-width: 200px;
+    }
+  }
+}
+
+@media (min-width: 769px) {
+  ion-menu-button {
+    display: none;
+  }
+}
+
