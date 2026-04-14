@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 // ── Interfaces ────────────────────────────────────────────────────────────────
 
@@ -46,7 +47,7 @@ export interface ActualizarUsuarioDTO {
 })
 export class UsuarioService {
 
-  private apiUrl = 'http://localhost/gestion-clientes/src/api';
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 

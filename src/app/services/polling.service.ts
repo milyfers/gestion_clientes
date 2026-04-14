@@ -1,7 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
-
+import { environment } from 'src/environments/environment';
 export interface Notificacion {
   id: string;
   mensaje: string;
@@ -21,7 +21,7 @@ export class PollingService {
   private activo          = false;
   private ultimoId        = 0;
 
-  private apiUrl = 'http://localhost/gestion-clientes/src/api';
+  private apiUrl = environment.apiUrl;
 
   constructor(
     private ngZone: NgZone,

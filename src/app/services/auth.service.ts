@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
-
+import { environment } from '../../environments/environment';
 export interface User {
   id: number;
   nombre: string;
@@ -15,7 +15,7 @@ export interface User {
 })
 export class AuthService {
 
-  private apiUrl = 'http://localhost/gestion-clientes/src/api';
+  private apiUrl = environment.apiUrl;
 
   // ✅ Estado reactivo del usuario — se propaga a toda la app al instante
   private usuarioSubject = new BehaviorSubject<User | null>(this.cargarUsuarioLocal());

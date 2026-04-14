@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { environment } from 'src/environments/environment';
 export interface Session {
   id: number;
   ip: string;
@@ -18,7 +18,7 @@ export interface Session {
 })
 export class SessionService {
 
-  private apiUrl = 'http://localhost/gestion-clientes/src/api';
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 

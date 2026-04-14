@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { IonicModule } from '@ionic/angular';
+import { environment } from 'src/environments/environment';
 import { addIcons } from 'ionicons';
 import {
   checkmarkCircleOutline, closeCircleOutline,
@@ -30,7 +31,7 @@ export class AppBPage implements OnInit {
   usuario: any   = null;
   errorMensaje   = '';
 
-  private apiUrl = 'http://localhost/gestion-clientes/src/api';
+  private apiUrl = environment.apiUrl;
 
   constructor(
     private http:   HttpClient,

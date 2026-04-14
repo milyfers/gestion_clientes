@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import {
   IonContent, IonButton, IonInput,
@@ -72,7 +73,7 @@ errRespuesta     = '';
   private readonly EMAIL_REGEX      = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
   private readonly CONTRASENA_REGEX = /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/;
 
-  private apiUrl = 'http://localhost/gestion-clientes/src/api';
+  private apiUrl = environment.apiUrl;
   usuarioId = 0;
 
   constructor(

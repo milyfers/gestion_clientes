@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  apiUrl: 'https://gestionclientes-production-3857.up.railway.app/src/api'
 };

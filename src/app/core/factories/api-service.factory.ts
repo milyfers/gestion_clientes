@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-
+import { environment } from 'src/environments/environment';
 /**
  * Factory Pattern — Parte 6
  *
@@ -16,7 +16,7 @@ export interface ApiConfig {
 
 export class ApiServiceFactory {
 
-  private static readonly BASE_URL = 'http://localhost/gestion-clientes/src/api';
+  private static readonly BASE_URL = environment.apiUrl;
 
   // ── Factory Method — crea configuración por microservicio ──
   static crear(microservicio: 'auth' | 'clientes' | 'proyectos' | 'usuarios'): ApiConfig {
