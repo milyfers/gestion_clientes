@@ -260,19 +260,3 @@ $radio-input:    4px;
     &:hover { color: #3498db; }
   }
 }
-
-ion-content::part(scroll) {
-  overflow: visible !important;
-}
-
-.login-content {
-  position: relative !important;
-  top: 0 !important;
-  margin-top: 0 !important;
-}
-
-ion-content {
-  --offset-top: 0 !important;
-  --padding-top: 0 !important;
-  margin-top: 0 !important;
-}
