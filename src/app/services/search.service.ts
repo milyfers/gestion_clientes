@@ -5,13 +5,15 @@ import { Proyecto, ProyectoFilters, ProyectoSearchResult } from '../models/proye
 import { Cliente, ClienteFilters, ClienteSearchResult } from '../models/cliente.model';
 import { CacheService } from './cache.service';
 import { LoggerService } from '../core/services/logger.service';
+import { ApiServiceFactory } from '../core/factories/api-service.factory';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SearchService {
 
-  private apiUrl = 'http://localhost/gestion-clientes/src/api';
+  private clientesConfig  = ApiServiceFactory.crearClientes();
+private proyectosConfig = ApiServiceFactory.crearProyectos();
 
   constructor(
     private http: HttpClient,
@@ -25,7 +27,7 @@ export class SearchService {
 
   searchClientes(query: string): Observable<Cliente[]> {
     const params = new HttpParams().set('q', query);
-    return this.http.get<Cliente[]>(`${this.apiUrl}/clientes.php`, { params });
+    return this.http.get<Cliente[]>(`${this.clientesConfig.fullUrl}`, { params });
   }
 
   searchClientesConCache(query: string): Observable<Cliente[]> {
@@ -83,10 +85,10 @@ export class SearchService {
   agregarCliente(cliente: Cliente): Observable<Cliente> {
     this.logger.startOperation();
     const start = performance.now();
-    this.logger.info('cliente_creado_intento', { method: 'POST', path: '/clientes.php' });
+    this.logger.info('cliente_creado_intento', { method: 'POST', path: '/index.php' });
 
     return new Observable(observer => {
-      this.http.post<Cliente>(`${this.apiUrl}/clientes.php`, {
+      this.http.post<Cliente>(`${this.clientesConfig.fullUrl}`, {
         nombre:        cliente.nombre,
         razonSocial:   cliente.razonSocial,
         rfc:           cliente.rfc,
@@ -119,10 +121,10 @@ export class SearchService {
   actualizarCliente(cliente: Cliente): Observable<Cliente> {
     this.logger.startOperation();
     const start = performance.now();
-    this.logger.info('cliente_actualizacion_intento', { method: 'PUT', path: `/clientes.php` });
+    this.logger.info('cliente_actualizacion_intento', { method: 'PUT', path: `/index.php` });
 
     return new Observable(observer => {
-      this.http.put<Cliente>(`${this.apiUrl}/clientes.php`, cliente).subscribe({
+      this.http.put<Cliente>(`${this.clientesConfig.fullUrl}`, cliente).subscribe({
         next: (res) => {
           this.logger.info('cliente_actualizado', { status: 200, responseTimeMs: performance.now() - start });
           this.logger.endOperation();
@@ -142,10 +144,10 @@ export class SearchService {
   eliminarCliente(id: number): Observable<boolean> {
     this.logger.startOperation();
     const start = performance.now();
-    this.logger.info('cliente_eliminacion_intento', { method: 'DELETE', path: `/clientes.php` });
+    this.logger.info('cliente_eliminacion_intento', { method: 'DELETE', path: `/index.php` });
 
     return new Observable(observer => {
-      this.http.delete(`${this.apiUrl}/clientes.php`, {
+      this.http.delete(`${this.clientesConfig.fullUrl}`, {
         params: new HttpParams().set('id', id)
       }).subscribe({
         next: () => {
@@ -165,7 +167,7 @@ export class SearchService {
   }
 
   getClientePorId(id: number): Observable<Cliente> {
-  return this.http.get<Cliente>(`${this.apiUrl}/clientes.php`, {
+  return this.http.get<Cliente>(`${this.clientesConfig.fullUrl}`, {
     params: new HttpParams().set('id', id)
   });
 }
@@ -175,7 +177,7 @@ export class SearchService {
 
   searchProyectos(query: string): Observable<Proyecto[]> {
     const params = new HttpParams().set('q', query);
-    return this.http.get<Proyecto[]>(`${this.apiUrl}/proyectos.php`, { params });
+    return this.http.get<Proyecto[]>(`${this.proyectosConfig.fullUrl}`, { params });
   }
 
   searchProyectosConCache(query: string): Observable<Proyecto[]> {
@@ -225,10 +227,10 @@ export class SearchService {
   agregarProyecto(proyecto: Proyecto): Observable<Proyecto> {
     this.logger.startOperation();
     const start = performance.now();
-    this.logger.info('proyecto_creado_intento', { method: 'POST', path: '/proyectos.php' });
+    this.logger.info('proyecto_creado_intento', { method: 'POST', path: '/index.php' });
 
     return new Observable(observer => {
-      this.http.post<Proyecto>(`${this.apiUrl}/proyectos.php`, {
+      this.http.post<Proyecto>(`${this.proyectosConfig.fullUrl}`, {
         nombre:      proyecto.nombre,
         descripcion: proyecto.descripcion,
         clienteId:   (proyecto as any).clienteId ?? (proyecto as any).cliente_id,
@@ -256,10 +258,10 @@ export class SearchService {
   actualizarProyecto(proyecto: Proyecto): Observable<Proyecto> {
     this.logger.startOperation();
     const start = performance.now();
-    this.logger.info('proyecto_actualizacion_intento', { method: 'PUT', path: `/proyectos.php` });
+    this.logger.info('proyecto_actualizacion_intento', { method: 'PUT', path: `/index.php` });
 
     return new Observable(observer => {
-      this.http.put<Proyecto>(`${this.apiUrl}/proyectos.php`, {
+      this.http.put<Proyecto>(`${this.proyectosConfig.fullUrl}`, {
         ...proyecto,
         clienteId: (proyecto as any).clienteId ?? (proyecto as any).cliente_id
       }).subscribe({
@@ -282,10 +284,10 @@ export class SearchService {
   eliminarProyecto(id: number): Observable<boolean> {
     this.logger.startOperation();
     const start = performance.now();
-    this.logger.info('proyecto_eliminacion_intento', { method: 'DELETE', path: `/proyectos.php` });
+    this.logger.info('proyecto_eliminacion_intento', { method: 'DELETE', path: `/index.php` });
 
     return new Observable(observer => {
-      this.http.delete(`${this.apiUrl}/proyectos.php`, {
+      this.http.delete(`${this.proyectosConfig.fullUrl}`, {
         params: new HttpParams().set('id', id)
       }).subscribe({
         next: () => {
@@ -305,7 +307,7 @@ export class SearchService {
   }
 
   getProyectoPorId(id: number): Observable<Proyecto> {
-  return this.http.get<Proyecto>(`${this.apiUrl}/proyectos.php`, {
+  return this.http.get<Proyecto>(`${this.proyectosConfig.fullUrl}`, {
     params: new HttpParams().set('id', id)
   });
 }

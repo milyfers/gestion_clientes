@@ -1,18 +1,23 @@
 <?php
 header("Content-Type: application/json");
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
+require_once '../cors.php';
+require_once '../helpers.php';
+require_once '../auth_middleware.php'; 
+require_once '../config.php'; 
 
-require_once 'helpers.php';
+aplicarCORS();
+
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(200); exit(); }
-
-$conn = new mysqli("localhost", "root", "", "sistema_auth");
-if ($conn->connect_error) {
+$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+if ($conn->connect_error) {         
     http_response_code(500);
     echo json_encode(["message" => "Error de conexión"]);
     exit();
 }
+$usuarioToken = verificarToken(); 
+verificarRateLimit($conn, $_SERVER['REMOTE_ADDR'], 'clientes', 60);
+
+
 
 $method = $_SERVER['REQUEST_METHOD'];
 $data   = json_decode(file_get_contents("php://input"), true);

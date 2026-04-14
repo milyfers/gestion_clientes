@@ -4,6 +4,10 @@ class JWT {
     private static $secret = 'mi_clave_super_secreta_2026';
     private static $algoritmo = 'SHA256';
 
+    private static function getSecret(): string {
+    return defined('JWT_SECRET') ? JWT_SECRET : 'fallback_secret';
+    }
+
     // ── GENERAR TOKEN ─────────────────────────────────────────
     public static function generar(array $payload, int $expiracion = 900): string {
         // Header
@@ -22,7 +26,7 @@ class JWT {
         $firma = self::base64url(hash_hmac(
             self::$algoritmo,
             "$header.$payloadEncoded",
-            self::$secret,
+            self::getSecret(),
             true
         ));
 
@@ -43,7 +47,7 @@ class JWT {
         $firmaEsperada = self::base64url(hash_hmac(
             self::$algoritmo,
             "$header.$payload",
-            self::$secret,
+            self::getSecret(),
             true
         ));
 

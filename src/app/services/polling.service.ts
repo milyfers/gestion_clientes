@@ -64,7 +64,7 @@ export class PollingService {
   private consultarBackend(): void {
     console.time('[PollingService] consulta-servidor');
 
-    this.http.get<any[]>(`${this.apiUrl}/notificaciones.php`, {
+    this.http.get<any[]>(`${this.apiUrl}/auth/notificaciones.php`, {
       params: { desde: this.ultimoId }
     }).subscribe({
       next: (datos) => {
@@ -109,11 +109,11 @@ export class PollingService {
   // ═══════════════════════════════════════════════════════════════════
 
   marcarTodasLeidas(): void {
-    this.http.put(`${this.apiUrl}/notificaciones.php`, {}).subscribe();
+    this.http.put(`${this.apiUrl}/auth/notificaciones.php`, {}).subscribe();
   }
 
   marcarLeida(id: number): void {
-    this.http.put(`${this.apiUrl}/notificaciones.php`, {}, {
+    this.http.put(`${this.apiUrl}/auth/notificaciones.php`, {}, {
       params: { id }
     }).subscribe();
   }

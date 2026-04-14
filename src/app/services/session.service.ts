@@ -23,16 +23,16 @@ export class SessionService {
   constructor(private http: HttpClient) {}
 
   getSesiones(): Observable<Session[]> {
-    return this.http.get<Session[]>(`${this.apiUrl}/sessions.php`);
+    return this.http.get<Session[]>(`${this.apiUrl}/auth/sessions.php`);
   }
 
   cerrarSesion(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/sessions.php`, {
+    return this.http.delete(`${this.apiUrl}/auth/sessions.php`, {
       params: new HttpParams().set('id', id)
     });
   }
 
   cerrarTodasLasSesiones(): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/sessions.php`);
+    return this.http.delete(`${this.apiUrl}/auth/sessions.php`);
   }
 }
