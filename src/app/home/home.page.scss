@@ -260,3 +260,6 @@ $radio-input:    4px;
     &:hover { color: #3498db; }
   }
 }
+ion-content {
+  --offset-top: 0px !important;
+}
