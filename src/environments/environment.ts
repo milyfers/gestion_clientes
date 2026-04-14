@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: '${environment.apiUrl}'
+  apiUrl: 'http://localhost/gestion-clientes/src/api'  // ← tu servidor PHP local (XAMPP, Laragon, etc.)
 };
 
 /*
