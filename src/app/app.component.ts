@@ -68,8 +68,8 @@ export class AppComponent {
     private logger: LoggerService
   ) {
     // Detectar preferencia del sistema al iniciar
-    this.darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    document.documentElement.classList.toggle('ion-palette-dark', this.darkMode);
+    //this.darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    //document.documentElement.classList.toggle('ion-palette-dark', this.darkMode);
     this.handleGlobalErrors(); 
     const user = localStorage.getItem('user');
     if (user && user !== 'undefined' && user !== 'null') {
