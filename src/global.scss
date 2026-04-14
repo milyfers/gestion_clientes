@@ -81,3 +81,9 @@ ion-router-outlet {
   margin-top: 0 !important;
   top: 0 !important;
 }
+
+html, body, ion-app {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+}
