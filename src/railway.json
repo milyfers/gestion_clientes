@@ -1,0 +1,11 @@
+{
+  "$schema": "https://railway.app/railway.schema.json",
+  "build": {
+    "builder": "NIXPACKS",
+    "buildCommand": "npm run build -- --configuration production"
+  },
+  "deploy": {
+    "startCommand": "npx serve -s www -l $PORT",
+    "restartPolicyType": "ON_FAILURE"
+  }
+}
