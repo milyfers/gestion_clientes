@@ -31,12 +31,12 @@ export class AuthService {
   }
 
   login(email: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login.php`, { email, password });
+    return this.http.post(`${this.apiUrl}/auth/login.php`, { email, password });
     // ⚠️ No guardes nada aquí — el login solo inicia MFA, aún no hay token
   }
 
   verificarMFA(usuarioId: number, codigo: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/mfa/mfa_verificar.php`, { usuarioId, codigo }).pipe(
+    return this.http.post(`${this.apiUrl}/auth/mfa/mfa_verificar.php`, { usuarioId, codigo }).pipe(
       tap((response: any) => {
         localStorage.setItem('accessToken',  response.accessToken);
         localStorage.setItem('refreshToken', response.refreshToken);
@@ -51,7 +51,7 @@ export class AuthService {
 
   refresh(): Observable<any> {
     const refreshToken = localStorage.getItem('refreshToken');
-    return this.http.post(`${this.apiUrl}/refresh.php`, { refreshToken }).pipe(
+    return this.http.post(`${this.apiUrl}/auth/refresh.php`, { refreshToken }).pipe(
       tap((response: any) => {
         localStorage.setItem('accessToken', response.accessToken);
         localStorage.setItem('token',       response.accessToken);
