@@ -3,7 +3,7 @@ function aplicarCORS(): void {
     $permitidos = [
         'http://localhost:8100',  // Ionic dev
         'http://localhost:4200',  // Angular dev
-        'https://tudominio.com'   // producción (lo agregas después)
+        'https://gestionclientes-production-3857.up.railway.app',
     ];
 
     $origen = $_SERVER['HTTP_ORIGIN'] ?? '';
